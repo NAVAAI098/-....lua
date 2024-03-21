@@ -1,4 +1,3 @@
-
 _G.Key = "05aba05b"
 
 local Hwid = {
