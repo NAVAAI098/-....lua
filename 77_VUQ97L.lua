@@ -1,8 +1,8 @@
 
-_G.Key = "5f3e44eb"
+_G.Key = "5e453c2b"
 
 local Hwid = {
-    ["5f3e44eb"] = "5f3e44eb-98bc-417d-a5df-c8f54b95952f"
+    ["5e453c2b"] = "5e453c2b-016c-43d6-a2f9-250c02b7e971"
 }
 local ClientId = game:GetService("RbxAnalyticsService"):GetClientId()
 local Hwide = string.split((ClientId),'-')
