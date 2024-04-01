@@ -1,0 +1,11 @@
+spawn(function()
+    while true do wait(5)
+        pcall(function()
+            local args = {
+                [1] = workspace:WaitForChild("Interactions"):WaitForChild("Lakes"):WaitForChild("Lake")
+            }
+
+            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("DrinkRemote"):FireServer(unpack(args))
+        end)
+    end
+end)
