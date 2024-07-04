@@ -1,0 +1,34 @@
+if game.PlaceId == 5233782396 then
+    while true do wait()
+        pcall(function()
+            if game:GetService("Players").LocalPlayer.PlayerGui.Data.Slot1.Age.Value == 0 then
+                game:GetService("ReplicatedStorage").Remotes.CreateSlotRemote:InvokeServer("Momola")
+                wait(10)
+            end
+            if game:GetService("Players").LocalPlayer.PlayerGui.Data.Slot1.Age.Value == 1 then
+                game:GetService("ReplicatedStorage").Remotes.SpawnRemote:InvokeServer("Slot1")
+                wait(10)
+            end
+            if game:GetService("Players").LocalPlayer.PlayerGui.DeathGui.ContainerFrame.Visible == true then
+                for i,v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.DeathGui.ContainerFrame.BottomFrame.ButtonsFrame:GetChildren()) do
+                    if v.Name == "Return" then
+                        local VirtualUser = game:GetService("VirtualUser")
+                        v.Size = UDim2.new(5000, 5000, 5000, 5000)
+                        VirtualUser:CaptureController()
+                        VirtualUser:ClickButton1(Vector2.new(50, 50), CFrame.new(Vector3.new(0, 0, 0)))
+                    end
+                end
+            end
+            if game:GetService("Players").LocalPlayer.PlayerGui.Data.Slot1.Health.Value == 0 and game:GetService("Players").LocalPlayer.PlayerGui.DeathGui.ContainerFrame.Visible == false then
+                wait(10)
+                local args = {
+                    [1] = "Slot1",
+                    [2] = false
+                }
+
+                game:GetService("ReplicatedStorage").Remotes.RestartSlotRemote:InvokeServer(unpack(args))
+                wait(10)
+            end
+        end)
+    end
+end
