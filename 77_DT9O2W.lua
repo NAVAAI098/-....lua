@@ -1,168 +1,164 @@
-_G.Key = "11b1e5b1"
-
-local Hwid = {
-    ["11b1e5b1"] = "11b1e5b1-6956-43ac-b5db-9683cdf652bd"
-}
-local ClientId = game:GetService("RbxAnalyticsService"):GetClientId()
-local Hwide = string.split((ClientId),'-')
-local Key = Hwide[1]
-
-setclipboard("Key :"..(Key).." | "..(ClientId))
-if _G.Key == Key then
-if Hwid[_G.Key] == game:GetService("RbxAnalyticsService"):GetClientId() then
-
-    local decalsyeeted = true
-    local g = game
-    local w = g.Workspace
-    local l = g.Lighting
-    local t = w.Terrain
-    sethiddenproperty(l,"Technology",2)
-    sethiddenproperty(t,"Decoration",false)
-    t.WaterWaveSize = 0
-    t.WaterWaveSpeed = 0
-    t.WaterReflectance = 0
-    t.WaterTransparency = 0
-    l.GlobalShadows = 0
-    l.FogEnd = 9e9
-    l.Brightness = 0
-    settings().Rendering.QualityLevel = "Level01"
-    for i, v in pairs(w:GetDescendants()) do
-        if v:IsA("BasePart") and not v:IsA("MeshPart") then
-            v.Material = "Plastic"
-            v.Reflectance = 0
-        elseif (v:IsA("Decal") or v:IsA("Texture")) and decalsyeeted then
-            v.Transparency = 1
-        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
-            v.Lifetime = NumberRange.new(0)
-        elseif v:IsA("Explosion") then
-            v.BlastPressure = 1
-            v.BlastRadius = 1
-        elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") then
-            v.Enabled = false
-        elseif v:IsA("MeshPart") and decalsyeeted then
-            v.Material = "Plastic"
-            v.Reflectance = 0
-            v.TextureID = 10385902758728957
-        elseif v:IsA("SpecialMesh") and decalsyeeted  then
-            v.TextureId=0
-        elseif v:IsA("ShirtGraphic") and decalsyeeted then
-            v.Graphic=0
-        elseif (v:IsA("Shirt") or v:IsA("Pants")) and decalsyeeted then
-            v[v.ClassName.."Template"]=0
-        end
-    end
-    for i = 1,#l:GetChildren() do
-        e=l:GetChildren()[i]
-        if e:IsA("BlurEffect") or e:IsA("SunRaysEffect") or e:IsA("ColorCorrectionEffect") or e:IsA("BloomEffect") or e:IsA("DepthOfFieldEffect") then
-            e.Enabled = false
-        end
-    end
-    w.DescendantAdded:Connect(function(v)
-        wait()--prevent errors and shit
-    if v:IsA("BasePart") and not v:IsA("MeshPart") then
-            v.Material = "Plastic"
-            v.Reflectance = 0
-        elseif v:IsA("Decal") or v:IsA("Texture") and decalsyeeted then
-            v.Transparency = 1
-        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
-            v.Lifetime = NumberRange.new(0)
-        elseif v:IsA("Explosion") then
-            v.BlastPressure = 1
-            v.BlastRadius = 1
-        elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") then
-            v.Enabled = false
-        elseif v:IsA("MeshPart") and decalsyeeted then
-            v.Material = "Plastic"
-            v.Reflectance = 0
-            v.TextureID = 10385902758728957
-        elseif v:IsA("SpecialMesh") and decalsyeeted then
-            v.TextureId=0
-        elseif v:IsA("ShirtGraphic") and decalsyeeted then
-            v.ShirtGraphic=0
-        elseif (v:IsA("Shirt") or v:IsA("Pants")) and decalsyeeted then
-            v[v.ClassName.."Template"]=0
-        end
-    end)
-    game:service'Players'.LocalPlayer.Idled:connect(function()
-        bb:CaptureController()bb:ClickButton2(Vector2.new())
-        ab.Text="Roblox kicked you but we didnt let them!"wait(2)ab.Text="Status : Active"end)
-    spawn(function()
-        while true do wait()
+spawn(function()
+    _G.Kuy = true
+        local NoclipNotDup = tostring(math.random(10000000,99999999))
+        local fenv = getgenv()
+        local shp = fenv.sethiddenproperty or fenv.set_hidden_property or fenv.set_hidden_prop or fenv.sethiddenprop
+        local localplayer  = game.Players.LocalPlayer
+        while game:GetService("RunService").Stepped:Wait() do
             pcall(function()
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_InvokeCustomFromClient"):InvokeServer("FlowerGarden","PlantSeed",1,"Diamond")
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_InvokeCustomFromClient"):InvokeServer("FlowerGarden","PlantSeed",2,"Diamond")
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_InvokeCustomFromClient"):InvokeServer("FlowerGarden","PlantSeed",3,"Diamond")
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_InvokeCustomFromClient"):InvokeServer("FlowerGarden","PlantSeed",4,"Diamond")
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_InvokeCustomFromClient"):InvokeServer("FlowerGarden","PlantSeed",5,"Diamond")
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_InvokeCustomFromClient"):InvokeServer("FlowerGarden","PlantSeed",6,"Diamond")
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_InvokeCustomFromClient"):InvokeServer("FlowerGarden","PlantSeed",7,"Diamond")
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_InvokeCustomFromClient"):InvokeServer("FlowerGarden","PlantSeed",8,"Diamond")
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_InvokeCustomFromClient"):InvokeServer("FlowerGarden","PlantSeed",9,"Diamond")
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_InvokeCustomFromClient"):InvokeServer("FlowerGarden","PlantSeed",10,"Diamond") 
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_FireCustomFromClient"):FireServer("FlowerGarden","ClaimPlant",1)
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_FireCustomFromClient"):FireServer("FlowerGarden","ClaimPlant",2)
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_FireCustomFromClient"):FireServer("FlowerGarden","ClaimPlant",3)
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_FireCustomFromClient"):FireServer("FlowerGarden","ClaimPlant",4)
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_FireCustomFromClient"):FireServer("FlowerGarden","ClaimPlant",5)
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_FireCustomFromClient"):FireServer("FlowerGarden","ClaimPlant",6)
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_FireCustomFromClient"):FireServer("FlowerGarden","ClaimPlant",7)
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_FireCustomFromClient"):FireServer("FlowerGarden","ClaimPlant",8)
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_FireCustomFromClient"):FireServer("FlowerGarden","ClaimPlant",9)
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_FireCustomFromClient"):FireServer("FlowerGarden","ClaimPlant",10)
-            end)
-        end
-    end)
-    spawn(function()
-        while true do wait()
-            pcall(function()
-                for i = 1,6 do
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_InvokeCustomFromClient"):InvokeServer("FlowerGarden","WaterSeed",i)
-                wait(1)
+                local Humanoid = localplayer.Character.Humanoid
+                local Root = localplayer.Character.HumanoidRootPart
+                if shp then
+                    shp(localplayer, "SimulationRadius", 3300)
                 end
-            end)
-        end
-    end)
-    
-    spawn(function()
-        while true do wait()
-            pcall(function()
-                if game.PlaceId == 8737899170 then 
-                    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.__THINGS.Instances.FlowerGarden.Teleports.Enter.CFrame
-                        wait(10)
-                    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-451.7480163574219, 108.44534301757812, -1396.35986328125)
-                        wait(30)
+                if _G.Kuy then
                     
-                    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.__THINGS.Instances.FlowerGarden.Teleports.Leave.CFrame
-                        wait(150)
-                end
-            end)
-        end
-    end)
+                    if Humanoid:GetState() == Enum.HumanoidStateType.Seated or Humanoid.Health <= 0 then 
+                        Humanoid.Jump = true
+                        Humanoid.Sit = false
+                        if Root:FindFirstChild("NoClip"..NoclipNotDup) then 
+                            Root:FindFirstChild("NoClip"..NoclipNotDup):Destroy()
+                        end
+                    end
     
-    spawn(function()
-        while true do wait()
-            pcall(function()
-                for i = 1,6 do
-                    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Merchant_RequestPurchase"):InvokeServer("GardenMerchant",i)
-                    game:GetService("ReplicatedStorage").Network.GiftBag_Open:InvokeServer("Seed Bag")
-                    wait(0.1)
+                    if Humanoid.Sit == false and Humanoid.Health > 0 then
+                        for i,v in pairs(localplayer.Character:GetChildren()) do
+                            if v:IsA("BasePart") then
+                                v.CanCollide = false
+                            end
+                        end
+                    else
+                        Humanoid.Sit = false
+                    end
+                    if not Root:FindFirstChild("NoClip"..NoclipNotDup) and Humanoid.Sit == false then
+    
+                        local bv = Instance.new("BodyVelocity")
+                        bv.Parent = Root
+                        bv.Name = "NoClip"..NoclipNotDup
+                        bv.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+                        bv.Velocity = Vector3.new(0,0,0)
+                    end
+                else
+                    if Root:FindFirstChild("NoClip"..NoclipNotDup) then 
+                        Root:FindFirstChild("NoClip"..NoclipNotDup):Destroy()
+                    end
                 end
             end)
         end
     end)
-    spawn(function()
-        while true do wait()
-            pcall(function()
-                for i = 1,6 do
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Instancing_InvokeCustomFromClient"):InvokeServer("FlowerGarden","WaterSeed",i)
-                wait(1)
-                end
-            end)
+
+function Teleport(T1)
+    local Distance = (T1.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+    if Distance > 285 then
+        Speed = 750
+    elseif Distance < 500 then
+        Speed = 335
+    elseif Distance > 500 then
+        Speed = 335
+    elseif Distance > 1000 then
+        Speed = 335
+    elseif Distance < 1000 then
+        Speed = 335
+    end
+
+    if (T1.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 285 then
+        if _G.Tween ~= nil then
+            _G.Tween:Cancel()
         end
-    end)
-    else
-        print("Not Have Hwid")    
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =  CFrame.new(T1.Position + Vector3.new(1, 5, 0), T1.Position)
+    elseif (T1.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude > 285 then
+        _G.Tween = game:GetService("TweenService"):Create(game.Players.LocalPlayer.Character.HumanoidRootPart,TweenInfo.new(Distance/Speed, Enum.EasingStyle.Linear),{CFrame =  CFrame.new(T1.Position + Vector3.new(1, 5, 0), T1.Position)})
+        _G.Tween:Play()
+    end
 end
+
+local KillAura = function()
+    local realtabl = {}
+
+    -- ตรวจสอบทุก region ที่เป็น Folder
+    for _, region in pairs(workspace.Game.Regions.Dion.Areas.AncientRuins.MobsSpots:GetChildren()) do
+        if region:IsA("Folder") then
+            for _, part in pairs(region:GetChildren()) do
+                if part:IsA("Part") then
+                    for _, model in pairs(part:GetChildren()) do
+                        if model:IsA("Model") then
+                            -- ตรวจสอบว่าเป็น MOB และไม่ใช่ "City Guard"
+                            if model:GetAttribute("Type") == "MOB" and model:GetAttribute("Name") ~= "City Guard" then
+                                local player = game.Players.LocalPlayer
+                                if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                                    local distance = (model:GetPivot().Position - player.Character.HumanoidRootPart.Position).Magnitude
+
+                                    -- ตรวจสอบระยะทางน้อยกว่า 10 หน่วย
+                                    if distance < 10 then
+                                        local hitboxname
+
+                                        -- ค้นหา hitbox ใน model
+                                        for _, child in pairs(model:GetChildren()) do
+                                            if child:IsA("BasePart") and child.Name:lower():find("hitbox") then
+                                                hitboxname = child.Name
+                                                break
+                                            end
+                                        end
+
+                                        -- ตรวจสอบว่า hitboxname ถูกพบหรือไม่
+                                        if hitboxname and model:GetAttribute("CharacterId") then
+                                            table.insert(realtabl, {
+                                                [model:GetAttribute("CharacterId")] = {
+                                                    ["clientAuthoroty"] = true,
+                                                    ["aimedTarget"] = model:GetAttribute("CharacterId"),
+                                                    ["additionalData"] = {
+                                                        ["hittedPartName"] = hitboxname
+                                                    }
+                                                }
+                                            })
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    -- ส่งข้อมูลหาก realtabl มีข้อมูล
+    if #realtabl > 0 then
+        local combatEvent = game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Combat"):WaitForChild("MeleeWeaponAttackHit")
+        if combatEvent then
+            combatEvent:FireServer(unpack(realtabl))
+        end
+    end
+end
+    
+while wait(0.7) do
+    local A = "GrizzlyBear"
+    local B = "UndeadBear"
+    local C = "Body"
+
+    -- ตรวจสอบว่ามี MobSpots สำหรับตัวแปร A หรือไม่
+    local mobSpots = workspace.Game.Regions.Dion.Areas.AncientRuins.MobsSpots[A]
+    if mobSpots then
+        for i, v in pairs(mobSpots:GetChildren()) do
+            if v.Name == A then
+                repeat
+                    wait()
+
+                    -- ตรวจสอบว่า v[B] มี HumanoidRootPart อยู่จริง
+                    if v[B] and v[B]:FindFirstChild("HumanoidRootPart") then
+                        Teleport(v[B].HumanoidRootPart.CFrame)
+                        wait(0.7)
+                    end
+
+                    -- เรียกฟังก์ชัน KillAura
+                    KillAura()
+
+                -- ตรวจสอบว่ามี Humanoid และ Body อยู่ก่อนจะเข้าถึง Health และ CanCollide
+                until v[B] and v[B]:FindFirstChild("Humanoid") and v[B].Humanoid.Health <= 0 or
+                        v[B]:FindFirstChild(C) and not v[B][C].CanCollide
+            end
+        end
     else
-        print("Not Have Key")   
+        warn("MobSpots for " .. A .. " not found.")
+    end
 end
