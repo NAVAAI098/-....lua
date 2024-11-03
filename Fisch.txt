@@ -58,7 +58,7 @@ local function AutoEquip()
 
     -- วนลูปเพื่อตรวจสอบการสวมใส่เครื่องมืออัตโนมัติ
     spawn(function()
-        while task.wait(3) do -- ตรวจสอบทุก ๆ 0.5 วินาที (สามารถปรับค่าได้)
+        while task.wait(0.5) do -- ตรวจสอบทุก ๆ 0.5 วินาที (สามารถปรับค่าได้)
             pcall(function()
                 -- ตรวจสอบ Backpack ของผู้เล่น
                 local backpack = player:FindFirstChild("Backpack")
