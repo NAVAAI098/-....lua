@@ -1,3 +1,10 @@
+if not game: IsLoaded() then game. Loaded:Wait() end
+
+repeat task.wait() until game:GetService("Players")
+repeat task.wait() until game:GetService("Players").LocalPlayer
+repeat task.wait() until game:GetService( "ReplicatedStorage")
+repeat task.wait() until game:GetService( "ReplicatedFirst")
+
 local function createGui()
     local playerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
     local existingGui = playerGui:FindFirstChild("kaitun - budget")
@@ -49,8 +56,14 @@ local function AutoEquip()
         return
     end
 
-    -- ตรวจสอบว่าโฟลเดอร์ Rods มีอยู่ใน ReplicatedStorage
-    local rodsFolder = game:GetService("ReplicatedStorage").playerstats:FindFirstChild(playerName)
+    -- ตรวจสอบว่าโฟลเดอร์ playerstats และ Rods มีอยู่ใน ReplicatedStorage
+    local playerStats = game:GetService("ReplicatedStorage"):FindFirstChild("playerstats")
+    if not playerStats then
+        warn("playerstats folder not found in ReplicatedStorage.")
+        return
+    end
+
+    local rodsFolder = playerStats:FindFirstChild(playerName)
     if not rodsFolder or not rodsFolder:FindFirstChild("Rods") then
         warn("Rods folder not found for the player in ReplicatedStorage.")
         return
@@ -65,7 +78,7 @@ local function AutoEquip()
                 if backpack then
                     for _, rod in pairs(rodsFolder.Rods:GetChildren()) do
                         local tool = backpack:FindFirstChild(rod.Name)
-                        if tool and not humanoid:FindFirstChild(tool.Name) then
+                        if tool and not character:FindFirstChild(tool.Name) then
                             -- สวมใส่เครื่องมือถ้าหากยังไม่ได้ติดตั้ง
                             humanoid:EquipTool(tool)
                         end
@@ -78,6 +91,7 @@ local function AutoEquip()
         end
     end)
 end
+
 
 
 local function AutoEquip2()
@@ -105,6 +119,7 @@ local function AutoEquip2()
     end
 end
 
+-- ฟังก์ชันสำหรับคลิกอินเทอร์เฟซ GUI
 local function interact1(path)
     if path then
         game:GetService("GuiService").SelectedObject = path
@@ -117,14 +132,20 @@ local function interact1(path)
     end
 end
 
---ฟังก์ชันสำหรับการ AutoRob
+-- ฟังก์ชันสำหรับการ AutoRob
 local function Autorobs()
     local player = game.Players.LocalPlayer
     local playerName = player.Name
-    local coins = tonumber(game:GetService("ReplicatedStorage").playerstats[playerName].Stats.coins.Value)
-    local hasCarbonRod, hasNocturnalRod = false, false
+    local playerStats = game:GetService("ReplicatedStorage").playerstats:FindFirstChild(playerName)
 
-    for _, rod in pairs(game:GetService("ReplicatedStorage").playerstats[playerName].Rods:GetChildren()) do
+    -- ตรวจสอบว่า playerStats มีค่า
+    if not playerStats then return end
+
+    local coins = tonumber(playerStats.Stats.coins.Value)
+    local hasCarbonRod, hasNocturnalRod, hasTridentRod = false, false, false
+
+    -- ตรวจสอบว่าผู้เล่นมีคันเบ็ดแต่ละแบบหรือไม่
+    for _, rod in pairs(playerStats.Rods:GetChildren()) do
         if rod.Name == "Carbon Rod" then
             hasCarbonRod = true
         elseif rod.Name == "Nocturnal Rod" then
@@ -134,46 +155,64 @@ local function Autorobs()
         end
     end
 
+    -- ซื้อ Carbon Rod
     if not hasCarbonRod and coins >= 2000 then
         local prompt = player.PlayerGui:FindFirstChild("over") and player.PlayerGui.over:FindFirstChild("prompt")
         if prompt then
             interact1(prompt.confirm)
-            fireproximityprompt(workspace.world.interactables["Carbon Rod"].purchaserompt)
-            game:GetService("Players").LocalPlayer.Character:FindFirstChild("Flimsy Rod").events.reset:FireServer()
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(454, 153, 223)
-        else
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(454, 153, 223)
-            fireproximityprompt(workspace.world.interactables["Carbon Rod"].purchaserompt)
-            game:GetService("Players").LocalPlayer.Character:FindFirstChild("Flimsy Rod").events.reset:FireServer()
         end
+
+        local carbonRod = workspace.world.interactables:FindFirstChild("Carbon Rod")
+        if carbonRod and carbonRod:FindFirstChild("purchaserompt") then
+            fireproximityprompt(carbonRod.purchaserompt)
+        end
+
+        local flimsyRod = player.Character:FindFirstChild("Flimsy Rod")
+        if flimsyRod and flimsyRod:FindFirstChild("events") and flimsyRod.events:FindFirstChild("reset") then
+            flimsyRod.events.reset:FireServer()
+        end
+        player.Character.HumanoidRootPart.CFrame = CFrame.new(454, 153, 223)
     end
+
+    -- ซื้อ Nocturnal Rod
     if not hasNocturnalRod and coins >= 12000 then
         local prompt = player.PlayerGui:FindFirstChild("over") and player.PlayerGui.over:FindFirstChild("prompt")
         if prompt then
             interact1(prompt.confirm)
-            fireproximityprompt(workspace.world.interactables["Nocturnal Rod"].purchaserompt)
-            game:GetService("Players").LocalPlayer.Character:FindFirstChild("Carbon Rod").events.reset:FireServer()
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-144, -515, 1142)
-        else
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-144, -515, 1142)
-            fireproximityprompt(workspace.world.interactables["Nocturnal Rod"].purchaserompt)
-            game:GetService("Players").LocalPlayer.Character:FindFirstChild("Carbon Rod").events.reset:FireServer()
         end
+
+        local nocturnalRod = workspace.world.interactables:FindFirstChild("Nocturnal Rod")
+        if nocturnalRod and nocturnalRod:FindFirstChild("purchaserompt") then
+            fireproximityprompt(nocturnalRod.purchaserompt)
+        end
+
+        local carbonRod = player.Character:FindFirstChild("Carbon Rod")
+        if carbonRod and carbonRod:FindFirstChild("events") and carbonRod.events:FindFirstChild("reset") then
+            carbonRod.events.reset:FireServer()
+        end
+        player.Character.HumanoidRootPart.CFrame = CFrame.new(-144, -515, 1142)
     end
+
+    -- ซื้อ Trident Rod
     if not hasTridentRod and coins >= 150000 then
         local prompt = player.PlayerGui:FindFirstChild("over") and player.PlayerGui.over:FindFirstChild("prompt")
         if prompt then
             interact1(prompt.confirm)
-            fireproximityprompt(workspace.world.interactables["Trident Rod"].purchaserompt)
-            game:GetService("Players").LocalPlayer.Character:FindFirstChild("Nocturnal Rod").events.reset:FireServer()
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-144, -515, 1142)
-        else
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1484, -223, -2195)
-            fireproximityprompt(workspace.world.interactables["Trident Rod"].purchaserompt)
-            game:GetService("Players").LocalPlayer.Character:FindFirstChild("Nocturnal Rod").events.reset:FireServer()
         end
+
+        local tridentRod = workspace.world.interactables:FindFirstChild("Trident Rod")
+        if tridentRod and tridentRod:FindFirstChild("purchaserompt") then
+            fireproximityprompt(tridentRod.purchaserompt)
+        end
+
+        local nocturnalRod = player.Character:FindFirstChild("Nocturnal Rod")
+        if nocturnalRod and nocturnalRod:FindFirstChild("events") and nocturnalRod.events:FindFirstChild("reset") then
+            nocturnalRod.events.reset:FireServer()
+        end
+        player.Character.HumanoidRootPart.CFrame = CFrame.new(-1484, -223, -2195)
     end
 end
+
 
 local function Sell()
     local backpack = game:GetService("Players").LocalPlayer.Backpack
@@ -294,19 +333,20 @@ end)
 
 
 
+-- ฟังก์ชันสำหรับคลิกอินเทอร์เฟซ GUI
 local function interact(path)
     if path then
         game:GetService("GuiService").SelectedObject = path
-        task.wait(0.05)
+        task.wait(0.06)
         game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Return, false, game)
-        task.wait(0.05)
+        task.wait(0.06)
         game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Return, false, game)
-        task.wait(0.05)
+        task.wait(0.06)
         game:GetService("GuiService").SelectedObject = nil
     end
 end
--- เริ่มการทำงานในกระบวนการใหม่
--- ฟังก์ชันสำหรับการตรวจสอบเงื่อนไขและจัดการกิจกรรมในเกม
+
+-- ฟังก์ชันสำหรับจัดการการกระทำของผู้เล่น
 function ManagePlayerActions()
     local Players = game:GetService("Players")
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -318,29 +358,23 @@ function ManagePlayerActions()
             pcall(function()
                 local character = player.Character or player.CharacterAdded:Wait()
                 local playerName = player.Name
-                local coins = tonumber(ReplicatedStorage.playerstats[playerName].Stats.coins.Value)
-                local playerStats = ReplicatedStorage.playerstats[playerName]
+                local playerStats = ReplicatedStorage.playerstats:FindFirstChild(playerName)
                 local NPCs = workspace.world.npcs:GetChildren()
-                local rods = playerStats.Rods:GetChildren()
 
+                if not playerStats then return end  -- ตรวจสอบว่า playerStats มีค่า
+                local coins = tonumber(playerStats.Stats.coins.Value)
+                local rods = playerStats.Rods:GetChildren()
                 local isShakeUI = playerGui:FindFirstChild("shakeui") ~= nil
 
                 for _, rod in pairs(rods) do
                     if not isShakeUI and coins <= 2000 and not playerStats.Rods:FindFirstChild("Carbon Rod") then
-                        -- โทรฟังก์ชัน Teleport
                         Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
                     elseif coins >= 2000 and not playerStats.Rods:FindFirstChild("Carbon Rod") then
-                        if _G.Tween then
-                            _G.Tween:Cancel()
-                        end
+                        if _G.Tween then _G.Tween:Cancel() end
                     elseif coins >= 12000 and not playerStats.Rods:FindFirstChild("Nocturnal Rod") then
-                        if _G.Tween then
-                            _G.Tween:Cancel()
-                        end
+                        if _G.Tween then _G.Tween:Cancel() end
                     elseif coins >= 150000 and not playerStats.Rods:FindFirstChild("Trident Rod") then
-                        if _G.Tween then
-                            _G.Tween:Cancel()
-                        end
+                        if _G.Tween then _G.Tween:Cancel() end
                     elseif not isShakeUI and playerStats.Rods:FindFirstChild("Carbon Rod") and not playerStats.Rods:FindFirstChild("Trident Rod") then
                         Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
                     elseif not isShakeUI and playerStats.Rods:FindFirstChild("Nocturnal Rod") and not playerStats.Rods:FindFirstChild("Trident Rod") then
@@ -349,7 +383,6 @@ function ManagePlayerActions()
                         Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
                     end
 
-                    -- ส่งเหตุการณ์ cast ไปยังเซิร์ฟเวอร์ถ้า NPC คือ "Mel Merchant"
                     for _, NPC in pairs(NPCs) do
                         if NPC.Name == "Mel Merchant" and character:FindFirstChild(rod.Name) and not isShakeUI then
                             local args = {100, 1}
@@ -357,25 +390,24 @@ function ManagePlayerActions()
                         end
                     end
 
-                    -- คลิกปุ่ม "shakeui" ถ้ามี
                     if isShakeUI then
-                        local button = playerGui.shakeui.safezone.button
-                        if button then
-                            interact(button)
-                        end
+                        local button = playerGui.shakeui.safezone:FindFirstChild("button")
+                        if button then interact(button) end
                     end
 
-                    -- ส่งเหตุการณ์ "reelfinished" ถ้ามี "reel"
                     if playerGui:FindFirstChild("reel") then
                         local args = {100, false}
-                        local eventsFolder = ReplicatedStorage:WaitForChild("events")
-                        eventsFolder:WaitForChild("reelfinished"):FireServer(unpack(args))
+                        local eventsFolder = ReplicatedStorage:FindFirstChild("events")
+                        if eventsFolder then
+                            eventsFolder:WaitForChild("reelfinished"):FireServer(unpack(args))
+                        end
                     end
                 end
             end)
         end
     end)
 end
+
 
 spawn(function()
     while task.wait(3) do
@@ -398,6 +430,11 @@ end)
 spawn(function()
     while task.wait(0.1) do
         pcall(function()
+            if not game: IsLoaded() then game. Loaded:Wait() end
+            repeat task.wait() until game:GetService("Players")
+            repeat task.wait() until game:GetService("Players").LocalPlayer
+            repeat task.wait() until game:GetService( "ReplicatedStorage")
+            repeat task.wait() until game:GetService( "ReplicatedFirst")
             if game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == false then
                 ManagePlayerActions()
                 Sell()
