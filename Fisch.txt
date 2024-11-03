@@ -217,7 +217,7 @@ end
 local function Sell()
     local backpack = game:GetService("Players").LocalPlayer.Backpack
     local itemCount = #backpack:GetChildren()  -- นับจำนวนรายการใน Backpack
-    if itemCount > 20 then
+    if itemCount > 30 then
         game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1656, -214, -2825)
         workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Mel Merchant"):WaitForChild("merchant"):WaitForChild("sellall"):InvokeServer()
     end
@@ -368,6 +368,7 @@ function ManagePlayerActions()
 
                 for _, rod in pairs(rods) do
                     if not isShakeUI and coins <= 2000 and not playerStats.Rods:FindFirstChild("Carbon Rod") then
+                        AutoEquip()
                         Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
                     elseif coins >= 2000 and not playerStats.Rods:FindFirstChild("Carbon Rod") then
                         if _G.Tween then _G.Tween:Cancel() end
@@ -376,10 +377,13 @@ function ManagePlayerActions()
                     elseif coins >= 150000 and not playerStats.Rods:FindFirstChild("Trident Rod") then
                         if _G.Tween then _G.Tween:Cancel() end
                     elseif not isShakeUI and playerStats.Rods:FindFirstChild("Carbon Rod") and not playerStats.Rods:FindFirstChild("Trident Rod") then
+                        AutoEquip()
                         Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
                     elseif not isShakeUI and playerStats.Rods:FindFirstChild("Nocturnal Rod") and not playerStats.Rods:FindFirstChild("Trident Rod") then
+                        AutoEquip()
                         Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
                     elseif not isShakeUI and playerStats.Rods:FindFirstChild("Nocturnal Rod") and playerStats.Rods:FindFirstChild("Trident Rod") then
+                        AutoEquip()
                         Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
                     end
 
@@ -413,6 +417,7 @@ spawn(function()
     while task.wait(3) do
         pcall(function()
             if game.PlaceId == 16732694052 then
+                AutoEquip()
                 --if game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled ~= true and not game.Workspace:FindFirstChild("active") and game.Workspace.active:FindFirstChild("flags")  then
                     if game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == true then
                         game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, true, nil, 1)
