@@ -5,49 +5,74 @@ repeat task.wait() until game:GetService("Players").LocalPlayer
 repeat task.wait() until game:GetService( "ReplicatedStorage")
 repeat task.wait() until game:GetService( "ReplicatedFirst")
 
--- ฟังก์ชันสร้าง GUI
-local function createGui()
-    local playerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-    local existingGui = playerGui:FindFirstChild("kaitun - budget")
-    
-    -- ถ้า GUI มีอยู่แล้ว ไม่ต้องสร้างใหม่
-    if existingGui then
-        return
+local lgh =  game:GetService("Lighting")
+sethiddenproperty(lgh,"Technology",2)
+lgh.FogStart = 1/0
+lgh.FogEnd = 1/0
+
+for i,v in ipairs(lgh:GetChildren()) do
+    if v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("SunRaysEffect") or v:IsA("DepthOfFieldEffect") then
+        v.Enabled = false
     end
-
-    -- สร้าง GUI ใหม่ถ้ายังไม่มี
-    local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "kaitun - budget"
-    ScreenGui.Parent = playerGui
-    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    ScreenGui.DisplayOrder = 999
-    ScreenGui.ResetOnSpawn = false
-    ScreenGui.IgnoreGuiInset = true
-
-    local Frame = Instance.new("Frame", ScreenGui)
-    Frame.Active = false
-    Frame.AnchorPoint = Vector2.new(0.5, 0.5)
-    Frame.BackgroundColor3 = Color3.fromRGB(7, 7, 7)
-    Frame.BackgroundTransparency = 0.5
-    Frame.Position = UDim2.new(0.5, 0, 0.5, 0)
-    Frame.Size = UDim2.new(1, 0, 1, 0)
-
-    local TextLabel = Instance.new("TextLabel", Frame)
-    TextLabel.Active = true
-    TextLabel.BackgroundTransparency = 1
-    TextLabel.Position = UDim2.new(0.52, 0, 0.32, 0)
-    TextLabel.Size = UDim2.new(0.38, 0, 0.36, 0)
-    TextLabel.Font = Enum.Font.FredokaOne
-    TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    TextLabel.TextScaled = true
-    TextLabel.Text = "By.ตัง56:ใช้แล้วได้ดี"
-    TextLabel.TextWrapped = true
-    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 end
 
-createGui()
+-- [Terrain]
+local wsc = game:GetService("Workspace")
+wsc.Terrain.CastShadow = false
+wsc.Terrain.WaterReflectance = 0
+wsc.Terrain.WaterWaveSize = 0
+wsc.Terrain.WaterTransparency = 0
+wsc.Terrain.WaterWaveSpeed = 0
+sethiddenproperty(wsc, 'StreamingTargetRadius', 64)
+sethiddenproperty(wsc, 'StreamingPauseMode', 2)
+sethiddenproperty(wsc.Terrain, 'Decoration', false)
 
+-- [Disabled]
 
+local boostmap = function(v)
+    if v:IsA("Shirt") or v:IsA("Pants") then
+        v[v.ClassName.."Template"] = ""
+    elseif v:IsA("MeshPart") then
+        v.TextureID = ""
+    elseif v:IsA("BasePart") then
+        v.Material = Enum.Material.SmoothPlastic
+        v.Reflectance = 0
+        v.CastShadow = false
+    elseif v:IsA("SpecialMesh") then
+        v.TextureId = 0 
+    elseif v:IsA("Texture") or v:IsA("Decal") then
+        v.Texture = ""
+        v.Transparency = 1
+    elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+        v.Enabled = false
+        v.Lifetime = NumberRange.new(0)
+    elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") or v:IsA("PostEffect") then
+        v.Enabled = false
+    elseif v:IsA("ShirtGraphic") then
+        v.Graphic = ''
+    elseif v:IsA("Model") then
+        sethiddenproperty(v, 'LevelOfDetail', 1)
+    end
+end
+for i,v in pairs(wsc:GetDescendants()) do
+    pcall(boostmap,v)
+end
+wsc.DescendantAdded:Connect(function(v)
+    pcall(boostmap,v)
+end)
+
+-- [Settings]
+--game:GetService("NetworkClient"):SetOutgoingKBPSLimit(100)
+settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level01
+settings().Rendering.EagerBulkExecution = false
+
+settings().Network.IncomingReplicationLag = -1000
+settings().Physics.PhysicsEnvironmentalThrottle = 1
+
+UserSettings():GetService("UserGameSettings").MasterVolume = 0
+UserSettings():GetService("UserGameSettings").SavedQualityLevel = Enum.SavedQualitySetting.QualityLevel1
+-- ฟังก์ชัน AutoEquip สำหรับการติดตั้ง Rod อัตโนมัติ
 local function AutoEquip()
     local player = game.Players.LocalPlayer
     local character = player.Character or player.CharacterAdded:Wait()
@@ -88,6 +113,7 @@ local function AutoEquip()
     end)
 end
 
+
 local function AutoEquip2()
     local player = game:GetService("Players").LocalPlayer
     local character = player.Character or player.CharacterAdded:Wait()
@@ -114,76 +140,64 @@ local function AutoEquip2()
 end
 
 
--- ฟังก์ชันสำหรับการโต้ตอบกับ UI
 local function interact1(path)
     if path then
-        local guiService = game:GetService("GuiService")
-        local virtualInput = game:GetService("VirtualInputManager")
-        
-        guiService.SelectedObject = path
+        game:GetService("GuiService").SelectedObject = path
         task.wait(0.1)
-        virtualInput:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Return, false, game)
         task.wait(0.1)
-        virtualInput:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
-        guiService.SelectedObject = nil
+        game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+        task.wait(0.1)
+        game:GetService("GuiService").SelectedObject = nil
     end
 end
 
--- ฟังก์ชันสำหรับการ AutoRob ที่มีประสิทธิภาพ
+-- ฟังก์ชันสำหรับการ AutoRob
 local function Autorobs()
     local player = game.Players.LocalPlayer
     local playerName = player.Name
-    local playerStats = game:GetService("ReplicatedStorage").playerstats:FindFirstChild(playerName)
+    local coins = tonumber(game:GetService("ReplicatedStorage").playerstats[playerName].Stats.coins.Value)
+    local hasCarbonRod, hasNocturnalRod = false, false
 
-    if not playerStats then return end -- ตรวจสอบว่า playerStats มีค่า
-
-    -- ใช้ตัวแปรท้องถิ่นเพื่อลดการเข้าถึงโหนดซ้ำๆ
-    local rods = playerStats:FindFirstChild("Rods")
-    if not rods then return end
-
-    local coins = tonumber(playerStats.Stats.coins.Value)
-    local hasCarbonRod = rods:FindFirstChild("Carbon Rod") ~= nil
-    local hasNocturnalRod = rods:FindFirstChild("Nocturnal Rod") ~= nil
-    local hasTridentRod = rods:FindFirstChild("Trident Rod") ~= nil
-
-    -- ฟังก์ชันที่ใช้ซ้ำเพื่อลดโค้ดซ้ำซ้อน
-    local function buyRod(rodName, cost, purchaseLocation, resetRod)
-        if coins >= cost then
-            local prompt = player.PlayerGui:FindFirstChild("over") and player.PlayerGui.over:FindFirstChild("prompt")
-            if prompt then
-                interact1(prompt.confirm)
-            end
-
-            local rod = workspace.world.interactables:FindFirstChild(rodName)
-            if rod and rod:FindFirstChild("purchaserompt") then
-                fireproximityprompt(rod.purchaserompt)
-            end
-
-            if resetRod and player.Character:FindFirstChild(resetRod) then
-                local rodInstance = player.Character[resetRod]
-                if rodInstance:FindFirstChild("events") and rodInstance.events:FindFirstChild("reset") then
-                    rodInstance.events.reset:FireServer()
-                end
-            end
-
-            -- ย้ายตัวละครไปยังตำแหน่งที่กำหนด
-            player.Character.HumanoidRootPart.CFrame = purchaseLocation
+    for _, rod in pairs(game:GetService("ReplicatedStorage").playerstats[playerName].Rods:GetChildren()) do
+        if rod.Name == "Carbon Rod" then
+            hasCarbonRod = true
+        elseif rod.Name == "Nocturnal Rod" then
+            hasNocturnalRod = true
+        elseif rod.Name == "Trident Rod" then
+            hasTridentRod = true
         end
     end
 
-    -- ซื้อ Carbon Rod
-    if not hasCarbonRod then
-        buyRod("Carbon Rod", 2000, CFrame.new(454, 153, 223), "Flimsy Rod")
+    if not hasCarbonRod and coins >= 2000 then
+        local prompt = player.PlayerGui:FindFirstChild("over") and player.PlayerGui.over:FindFirstChild("prompt")
+        if prompt then
+            interact(prompt.confirm)
+        else
+            player.Character.HumanoidRootPart.CFrame = CFrame.new(449, 151, 226)
+            fireproximityprompt(workspace.world.interactables["Carbon Rod"].purchaserompt)
+            interact1(prompt.confirm)
+        end
     end
-
-    -- ซื้อ Nocturnal Rod
-    if not hasNocturnalRod then
-        buyRod("Nocturnal Rod", 12000, CFrame.new(-144, -515, 1142), "Carbon Rod")
+    if not hasNocturnalRod and coins >= 12000 then
+        local prompt = player.PlayerGui:FindFirstChild("over") and player.PlayerGui.over:FindFirstChild("prompt")
+        if prompt then
+            interact1(prompt.confirm)
+        else
+            player.Character.HumanoidRootPart.CFrame = CFrame.new(-144, -515, 1142)
+            fireproximityprompt(workspace.world.interactables["Nocturnal Rod"].purchaserompt)
+            interact1(prompt.confirm)
+        end
     end
-
-    -- ซื้อ Trident Rod
-    if not hasTridentRod then
-        buyRod("Trident Rod", 150000, CFrame.new(-1484, -223, -2195), "Nocturnal Rod")
+    if not hasTridentRod and coins >= 150000 then
+        local prompt = player.PlayerGui:FindFirstChild("over") and player.PlayerGui.over:FindFirstChild("prompt")
+        if prompt then
+            interact1(prompt.confirm)
+        else
+            player.Character.HumanoidRootPart.CFrame = CFrame.new(-1484, -223, -2195)
+            fireproximityprompt(workspace.world.interactables["Trident Rod"].purchaserompt)
+            interact1(prompt.confirm)
+        end
     end
 end
 
@@ -208,7 +222,7 @@ local function Reset()
         for _, rodInWorld in pairs(rodsInWorld) do
             -- ตรวจสอบว่า bobber มีอยู่และไม่มี shakeui
             if rodInWorld:FindFirstChild("bobber") and not playerGui:FindFirstChild("shakeui") then
-                wait(100)
+                wait(10)
                 local rodTool = character:FindFirstChild(rod.Name)
                 if rodTool then  -- ตรวจสอบว่า rod อยู่ในตัวละครก่อน
                     rodTool.events.reset:FireServer()
@@ -257,29 +271,37 @@ end
 
 spawn(function()
     _G.Kuy = true
-    local NoclipNotDup = tostring(math.random(10000000,99999999))
+    local NoclipNotDup = tostring(math.random(10000000, 99999999))
     local fenv = getgenv()
     local shp = fenv.sethiddenproperty or fenv.set_hidden_property or fenv.set_hidden_prop or fenv.sethiddenprop
-    local localplayer  = game.Players.LocalPlayer
+    local localplayer = game.Players.LocalPlayer
+    
     while game:GetService("RunService").Stepped:Wait() do
+        wait(0.1)  -- เพิ่ม wait เพื่อชะลอการทำงานของลูป
+        
         pcall(function()
+            if not localplayer.Character or not localplayer.Character:FindFirstChild("Humanoid") then return end
+            
             local Humanoid = localplayer.Character.Humanoid
-            local Root = localplayer.Character.HumanoidRootPart
+            local Root = localplayer.Character:FindFirstChild("HumanoidRootPart")
+
+            if not Root then return end  -- ตรวจสอบว่า Root มีอยู่
+
             if shp then
                 shp(localplayer, "SimulationRadius", 3300)
             end
+            
             if _G.Kuy then
-                
                 if Humanoid:GetState() == Enum.HumanoidStateType.Seated or Humanoid.Health <= 0 then 
                     Humanoid.Jump = true
                     Humanoid.Sit = false
-                    if Root:FindFirstChild("NoClip"..NoclipNotDup) then 
-                        Root:FindFirstChild("NoClip"..NoclipNotDup):Destroy()
+                    if Root:FindFirstChild("NoClip" .. NoclipNotDup) then 
+                        Root:FindFirstChild("NoClip" .. NoclipNotDup):Destroy()
                     end
                 end
 
                 if Humanoid.Sit == false and Humanoid.Health > 0 then
-                    for i,v in pairs(localplayer.Character:GetChildren()) do
+                    for _, v in pairs(localplayer.Character:GetChildren()) do
                         if v:IsA("BasePart") then
                             v.CanCollide = false
                         end
@@ -287,128 +309,130 @@ spawn(function()
                 else
                     Humanoid.Sit = false
                 end
-                if not Root:FindFirstChild("NoClip"..NoclipNotDup) and Humanoid.Sit == false then
-
+                
+                if not Root:FindFirstChild("NoClip" .. NoclipNotDup) and Humanoid.Sit == false then
                     local bv = Instance.new("BodyVelocity")
                     bv.Parent = Root
-                    bv.Name = "NoClip"..NoclipNotDup
-                    bv.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
-                    bv.Velocity = Vector3.new(0,0,0)
+                    bv.Name = "NoClip" .. NoclipNotDup
+                    bv.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+                    bv.Velocity = Vector3.new(0, 0, 0)  -- ปรับให้เหมาะสม
                 end
             else
-                if Root:FindFirstChild("NoClip"..NoclipNotDup) then 
-                    Root:FindFirstChild("NoClip"..NoclipNotDup):Destroy()
+                if Root:FindFirstChild("NoClip" .. NoclipNotDup) then 
+                    Root:FindFirstChild("NoClip" .. NoclipNotDup):Destroy()
+                end
+            end
+        end)
+    end
+end)
+-- ฟังก์ชันสำหรับคลิกปุ่ม GUI
+local function interact(path)
+    if path then
+        game:GetService("GuiService").SelectedObject = path
+        task.wait(0.05)
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+        task.wait(0.05)
+        game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+        task.wait(0.05)
+        game:GetService("GuiService").SelectedObject = nil
+    end
+end
+
+-- เริ่มการทำงานในกระบวนการใหม่
+spawn(function()
+    local Players = game:GetService("Players")
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local player = Players.LocalPlayer
+    local playerGui = player:WaitForChild("PlayerGui")
+
+    while task.wait(0.1) do
+        pcall(function()
+            if game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == false then
+                local character = player.Character or player.CharacterAdded:Wait()
+                local playerName = player.Name
+                local coins = tonumber(ReplicatedStorage.playerstats[playerName].Stats.coins.Value)
+                local playerStats = ReplicatedStorage.playerstats[playerName]
+                local rods = playerStats.Rods:GetChildren()
+                local NPCs = workspace.world.npcs:GetChildren()
+                local Carbon = game:GetService("ReplicatedStorage").playerstats[playerName].Rods:FindFirstChild("Carbon Rod")
+
+                -- เช็คเงื่อนไขต่างๆ
+                local isShakeUI = playerGui:FindFirstChild("shakeui") ~= nil
+
+                for _, rod in pairs(rods) do
+                    if not isShakeUI and coins <= 2000 and not Carbon then
+                        -- โทรฟังก์ชัน Teleport
+                        Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
+                    elseif coins >= 2000 and not Carbon then
+                        if _G.Tween then
+                            _G.Tween:Cancel()
+                        end
+                    elseif coins >= 12000 and not playerStats.Rods:FindFirstChild("Nocturnal Rod") then
+                        if _G.Tween then
+                            _G.Tween:Cancel()
+                        end
+                    elseif coins >= 150000 and not playerStats.Rods:FindFirstChild("Trident Rod") then
+                        if _G.Tween then
+                            _G.Tween:Cancel()
+                        end
+                    elseif not isShakeUI and Carbon and not playerStats.Rods:FindFirstChild("Trident Rod") then
+                        Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
+                    elseif not isShakeUI and playerStats.Rods:FindFirstChild("Nocturnal Rod") and not playerStats.Rods:FindFirstChild("Trident Rod") then
+                        Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
+                    elseif not isShakeUI and playerStats.Rods:FindFirstChild("Nocturnal Rod") and playerStats.Rods:FindFirstChild("Trident Rod") then
+                        Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
+                    end
+
+                    -- ส่งเหตุการณ์ cast ไปยังเซิร์ฟเวอร์ถ้า NPC คือ "Mel Merchant"
+                    for _, NPC in pairs(NPCs) do
+                        if NPC.Name == "Mel Merchant" and character:FindFirstChild(rod.Name) then
+                            local args = {100, 1}
+                            character[rod.Name].events.cast:FireServer(unpack(args))
+                        end
+                    end
+                end
+                -- คลิกปุ่ม "shakeui" ถ้ามี
+                if isShakeUI then
+                    local button = playerGui.shakeui.safezone.button
+                    if button then
+                        interact(button)
+                    end
+                end
+
+                -- ส่งเหตุการณ์ "reelfinished" ถ้ามี "reel"
+                if playerGui:FindFirstChild("reel") then
+                    local args = {100, false}
+                    local eventsFolder = ReplicatedStorage:WaitForChild("events")
+                    eventsFolder:WaitForChild("reelfinished"):FireServer(unpack(args))
+                end
+                if not isShakeUI then
+                    AutoEquip()
+                    wait(0.5)
                 end
             end
         end)
     end
 end)
 
-
-
-local function interact(path)
-    if path then
-        game:GetService("GuiService").SelectedObject = path
-        task.wait(0.07)
-        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Return, false, game)
-        task.wait(0.07)
-        game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Return, false, game)
-        task.wait(0.07)
-        game:GetService("GuiService").SelectedObject = nil
-    end
-end
-
-local function ManagePlayerActions()
-    local Players = game:GetService("Players")
-    local ReplicatedStorage = game:GetService("ReplicatedStorage")
-    local player = Players.LocalPlayer
-    local playerGui = player:WaitForChild("PlayerGui")
-    local playerStats = ReplicatedStorage.playerstats:FindFirstChild(player.Name)
-
-    if not playerStats then return end
-
-    -- ใช้การวนลูปที่มีประสิทธิภาพ
-    while true do
-        pcall(function()
-            local character = player.Character or player.CharacterAdded:Wait()
-            local coins = tonumber(playerStats.Stats.coins.Value)
-            local rods = playerStats.Rods:GetChildren()
-            local NPCs = workspace.world.npcs:GetChildren()
-            local isShakeUI = playerGui:FindFirstChild("shakeui") ~= nil
-
-            for _, rod in pairs(rods) do
-                if not isShakeUI and coins <= 2000 and not playerStats.Rods:FindFirstChild("Carbon Rod") then
-                    AutoEquip()
-                    Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
-                elseif coins >= 2000 and not playerStats.Rods:FindFirstChild("Carbon Rod") then
-                    if _G.Tween then _G.Tween:Cancel() end
-                elseif coins >= 12000 and not playerStats.Rods:FindFirstChild("Nocturnal Rod") then
-                    if _G.Tween then _G.Tween:Cancel() end
-                elseif coins >= 150000 and not playerStats.Rods:FindFirstChild("Trident Rod") then
-                    if _G.Tween then _G.Tween:Cancel() end
-                elseif not isShakeUI and playerStats.Rods:FindFirstChild("Carbon Rod") and not playerStats.Rods:FindFirstChild("Trident Rod") then
-                    AutoEquip()
-                    Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
-                elseif not isShakeUI and playerStats.Rods:FindFirstChild("Nocturnal Rod") and not playerStats.Rods:FindFirstChild("Trident Rod") then
-                    AutoEquip()
-                    Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
-                elseif not isShakeUI and playerStats.Rods:FindFirstChild("Nocturnal Rod") and playerStats.Rods:FindFirstChild("Trident Rod") then
-                    AutoEquip()
-                    Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
+while task.wait(0.1) do
+    pcall(function()
+        if game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == false then
+            Sell()
+            AutoEquip2()
+            Autorobs()
+            Reset()
+        elseif game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == true then
+            if game.PlaceId == 16732694052 then
+                if game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == true then
+                    game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, true, nil, 1)
+                    game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1)
+                    return
                 end
-
-                for _, NPC in pairs(NPCs) do
-                    if NPC.Name == "Mel Merchant" and character:FindFirstChild(rod.Name) and not isShakeUI then
-                        local args = {100, 1}
-                        character[rod.Name].events.cast:FireServer(unpack(args))
-                    end
-                end
-
-                if isShakeUI then
-                    local button = playerGui.shakeui.safezone:FindFirstChild("button")
-                    if button then interact(button) end
-                end
-
-                if playerGui:FindFirstChild("reel") then
-                    local args = {100, false}
-                    local eventsFolder = ReplicatedStorage:FindFirstChild("events")
-                    if eventsFolder then
-                        eventsFolder:WaitForChild("reelfinished"):FireServer(unpack(args))
-                    end
+                if game.Workspace:FindFirstChild("active") and game.Workspace.active:FindFirstChild("flags") then
+                    game.Workspace.active.flags:Destroy()
+                    return
                 end
             end
-        end)
-        task.wait(0.1) -- หน่วงเวลาสั้นๆ เพื่อไม่ให้โค้ดทำงานถี่เกินไป
-    end
+        end
+    end)
 end
-
--- เรียกใช้กระบวนการหลัก
-local function main()
-    while true do
-        pcall(function()
-            if not game:IsLoaded() then game.Loaded:Wait() end
-            local Players = game:GetService("Players")
-            local player = Players.LocalPlayer
-
-            -- รอให้ทรัพยากรโหลดเสร็จสิ้นก่อนเริ่มกระบวนการ
-            repeat task.wait() until player and game:GetService("ReplicatedStorage") and game:GetService("ReplicatedFirst")
-
-            if player.PlayerGui.loading.Enabled == false then
-                spawn(ManagePlayerActions) -- เรียกใช้ ManagePlayerActions ในลูปแบบต่อเนื่อง
-                Sell()
-                AutoEquip()
-                AutoEquip2()
-                Autorobs()
-                Reset()
-            elseif player.PlayerGui.loading.Enabled == true then
-                game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, true, nil, 1)
-                game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1)
-            end
-
-            -- รอเล็กน้อยก่อนที่จะเริ่มรอบถัดไป
-            task.wait(0.3) -- ปรับเวลานี้ตามที่คุณต้องการ
-        end)
-    end
-end
--- เรียกใช้กระบวนการหลัก
-spawn(main)
