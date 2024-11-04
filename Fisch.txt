@@ -173,40 +173,52 @@ local function Autorobs()
         local prompt = player.PlayerGui:FindFirstChild("over") and player.PlayerGui.over:FindFirstChild("prompt")
         if prompt then
             interact(prompt.confirm)
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, true, nil, 1)
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1)
         else
             player.Character.HumanoidRootPart.CFrame = CFrame.new(449, 151, 226)
             fireproximityprompt(workspace.world.interactables["Carbon Rod"].purchaserompt)
             interact1(prompt.confirm)
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, true, nil, 1)
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1)
         end
     end
     if not hasNocturnalRod and coins >= 12000 then
         local prompt = player.PlayerGui:FindFirstChild("over") and player.PlayerGui.over:FindFirstChild("prompt")
         if prompt then
             interact1(prompt.confirm)
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, true, nil, 1)
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1)
         else
             player.Character.HumanoidRootPart.CFrame = CFrame.new(-144, -515, 1142)
             fireproximityprompt(workspace.world.interactables["Nocturnal Rod"].purchaserompt)
             interact1(prompt.confirm)
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, true, nil, 1)
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1)
         end
     end
     if not hasTridentRod and coins >= 150000 then
         local prompt = player.PlayerGui:FindFirstChild("over") and player.PlayerGui.over:FindFirstChild("prompt")
         if prompt then
             interact1(prompt.confirm)
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, true, nil, 1)
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1)
         else
             player.Character.HumanoidRootPart.CFrame = CFrame.new(-1484, -223, -2195)
             fireproximityprompt(workspace.world.interactables["Trident Rod"].purchaserompt)
             interact1(prompt.confirm)
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, true, nil, 1)
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1)
         end
     end
 end
 
 local function Sell()
-    local backpack = game:GetService("Players").LocalPlayer.Backpack
-    local itemCount = #backpack:GetChildren()  -- นับจำนวนรายการใน Backpack
-    if itemCount > 50 then
-        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1656, -214, -2825)
-        workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Mel Merchant"):WaitForChild("merchant"):WaitForChild("sellall"):InvokeServer()
+    local backpack = game.Players.LocalPlayer.Backpack
+    if #backpack:GetChildren() > 20 then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1656, -214, -2825)
+        workspace.world.npcs["Mel Merchant"].merchant.sellall:InvokeServer()
+        wait(600)
     end
 end
 
