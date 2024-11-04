@@ -204,7 +204,7 @@ end
 local function Sell()
     local backpack = game:GetService("Players").LocalPlayer.Backpack
     local itemCount = #backpack:GetChildren()  -- นับจำนวนรายการใน Backpack
-    if itemCount > 20 then
+    if itemCount > 50 then
         game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1656, -214, -2825)
         workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Mel Merchant"):WaitForChild("merchant"):WaitForChild("sellall"):InvokeServer()
     end
