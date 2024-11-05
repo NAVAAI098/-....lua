@@ -4,7 +4,6 @@ repeat task.wait() until game:GetService("Players")
 repeat task.wait() until game:GetService("Players").LocalPlayer
 repeat task.wait() until game:GetService( "ReplicatedStorage")
 repeat task.wait() until game:GetService( "ReplicatedFirst")
-if game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == false then
     local lgh =  game:GetService("Lighting")
     sethiddenproperty(lgh,"Technology",2)
     lgh.FogStart = 1/0
@@ -72,7 +71,6 @@ if game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == false the
 
     UserSettings():GetService("UserGameSettings").MasterVolume = 0
     UserSettings():GetService("UserGameSettings").SavedQualityLevel = Enum.SavedQualitySetting.QualityLevel1
-end
 -- ฟังก์ชัน AutoEquip สำหรับการติดตั้ง Rod อัตโนมัติ
 local function AutoEquip()
     local player = game.Players.LocalPlayer
@@ -412,11 +410,11 @@ spawn(function()
                 end
 
                 -- ส่งเหตุการณ์ "reelfinished" ถ้ามี "reel"
-                if playerGui:FindFirstChild("reel") then
-                    local args = {100, false}
-                    local eventsFolder = ReplicatedStorage:WaitForChild("events")
-                    eventsFolder:WaitForChild("reelfinished"):FireServer(unpack(args))
-                end
+                -- if playerGui:FindFirstChild("reel") then
+                --     for i = 1, 50 do
+                --         game:GetService("ReplicatedStorage").events.reelfinished:FireServer(100, true)
+                --     end
+                -- end
                 if not isShakeUI then
                     AutoEquip()
                     wait(0.5)
@@ -427,6 +425,32 @@ spawn(function()
     end
 end)
 
+spawn(function()
+    local Players = game:GetService("Players")
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local player = Players.LocalPlayer
+    local playerGui = player:WaitForChild("PlayerGui")
+    
+    while task.wait(0.5) do -- เพิ่มเวลาการรอให้เหมาะสมเพื่อให้ลดการโหลดของระบบ
+        local success, errorMessage = pcall(function()
+            local reelGui = playerGui:FindFirstChild("reel")
+            if reelGui then
+                for i = 1, 150 do
+                    ReplicatedStorage.events.reelfinished:FireServer(100, true)
+                    task.wait(0.01) -- เพิ่มเวลารอในลูปเพื่อให้เซิร์ฟเวอร์มีเวลาประมวลผล
+                end
+                for i = 1, 150 do
+                    ReplicatedStorage.events.reelfinished:FireServer(100, true)
+                    task.wait(0.01) -- เพิ่มเวลารอในลูปเพื่อให้เซิร์ฟเวอร์มีเวลาประมวลผล
+                end
+            end
+        end)
+        
+        if not success then
+            warn("Error occurred: " .. errorMessage) -- แสดงข้อความแจ้งเตือนเมื่อเกิดข้อผิดพลาด
+        end
+    end
+end)
 
 while task.wait(0.1) do
     pcall(function()
