@@ -5,73 +5,75 @@ repeat task.wait() until game:GetService("Players").LocalPlayer
 repeat task.wait() until game:GetService( "ReplicatedStorage")
 repeat task.wait() until game:GetService( "ReplicatedFirst")
 
-local lgh =  game:GetService("Lighting")
-sethiddenproperty(lgh,"Technology",2)
-lgh.FogStart = 1/0
-lgh.FogEnd = 1/0
+if game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == false then
+    local lgh =  game:GetService("Lighting")
+    sethiddenproperty(lgh,"Technology",2)
+    lgh.FogStart = 1/0
+    lgh.FogEnd = 1/0
 
-for i,v in ipairs(lgh:GetChildren()) do
-    if v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("SunRaysEffect") or v:IsA("DepthOfFieldEffect") then
-        v.Enabled = false
+    for i,v in ipairs(lgh:GetChildren()) do
+        if v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("SunRaysEffect") or v:IsA("DepthOfFieldEffect") then
+            v.Enabled = false
+        end
     end
-end
 
--- [Terrain]
-local wsc = game:GetService("Workspace")
-wsc.Terrain.CastShadow = false
-wsc.Terrain.WaterReflectance = 0
-wsc.Terrain.WaterWaveSize = 0
-wsc.Terrain.WaterTransparency = 0
-wsc.Terrain.WaterWaveSpeed = 0
-sethiddenproperty(wsc, 'StreamingTargetRadius', 64)
-sethiddenproperty(wsc, 'StreamingPauseMode', 2)
-sethiddenproperty(wsc.Terrain, 'Decoration', false)
+    -- [Terrain]
+    local wsc = game:GetService("Workspace")
+    wsc.Terrain.CastShadow = false
+    wsc.Terrain.WaterReflectance = 0
+    wsc.Terrain.WaterWaveSize = 0
+    wsc.Terrain.WaterTransparency = 0
+    wsc.Terrain.WaterWaveSpeed = 0
+    sethiddenproperty(wsc, 'StreamingTargetRadius', 64)
+    sethiddenproperty(wsc, 'StreamingPauseMode', 2)
+    sethiddenproperty(wsc.Terrain, 'Decoration', false)
 
--- [Disabled]
+    -- [Disabled]
 
-local boostmap = function(v)
-    if v:IsA("Shirt") or v:IsA("Pants") then
-        v[v.ClassName.."Template"] = ""
-    elseif v:IsA("MeshPart") then
-        v.TextureID = ""
-    elseif v:IsA("BasePart") then
-        v.Material = Enum.Material.SmoothPlastic
-        v.Reflectance = 0
-        v.CastShadow = false
-    elseif v:IsA("SpecialMesh") then
-        v.TextureId = 0 
-    elseif v:IsA("Texture") or v:IsA("Decal") then
-        v.Texture = ""
-        v.Transparency = 1
-    elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
-        v.Enabled = false
-        v.Lifetime = NumberRange.new(0)
-    elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") or v:IsA("PostEffect") then
-        v.Enabled = false
-    elseif v:IsA("ShirtGraphic") then
-        v.Graphic = ''
-    elseif v:IsA("Model") then
-        sethiddenproperty(v, 'LevelOfDetail', 1)
+    local boostmap = function(v)
+        if v:IsA("Shirt") or v:IsA("Pants") then
+            v[v.ClassName.."Template"] = ""
+        elseif v:IsA("MeshPart") then
+            v.TextureID = ""
+        elseif v:IsA("BasePart") then
+            v.Material = Enum.Material.SmoothPlastic
+            v.Reflectance = 0
+            v.CastShadow = false
+        elseif v:IsA("SpecialMesh") then
+            v.TextureId = 0 
+        elseif v:IsA("Texture") or v:IsA("Decal") then
+            v.Texture = ""
+            v.Transparency = 1
+        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+            v.Enabled = false
+            v.Lifetime = NumberRange.new(0)
+        elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") or v:IsA("PostEffect") then
+            v.Enabled = false
+        elseif v:IsA("ShirtGraphic") then
+            v.Graphic = ''
+        elseif v:IsA("Model") then
+            sethiddenproperty(v, 'LevelOfDetail', 1)
+        end
     end
+    for i,v in pairs(wsc:GetDescendants()) do
+        pcall(boostmap,v)
+    end
+    wsc.DescendantAdded:Connect(function(v)
+        pcall(boostmap,v)
+    end)
+
+    -- [Settings]
+    --game:GetService("NetworkClient"):SetOutgoingKBPSLimit(100)
+    settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+    settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level01
+    settings().Rendering.EagerBulkExecution = false
+
+    settings().Network.IncomingReplicationLag = -1000
+    settings().Physics.PhysicsEnvironmentalThrottle = 1
+
+    UserSettings():GetService("UserGameSettings").MasterVolume = 0
+    UserSettings():GetService("UserGameSettings").SavedQualityLevel = Enum.SavedQualitySetting.QualityLevel1
 end
-for i,v in pairs(wsc:GetDescendants()) do
-    pcall(boostmap,v)
-end
-wsc.DescendantAdded:Connect(function(v)
-    pcall(boostmap,v)
-end)
-
--- [Settings]
---game:GetService("NetworkClient"):SetOutgoingKBPSLimit(100)
-settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
-settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level01
-settings().Rendering.EagerBulkExecution = false
-
-settings().Network.IncomingReplicationLag = -1000
-settings().Physics.PhysicsEnvironmentalThrottle = 1
-
-UserSettings():GetService("UserGameSettings").MasterVolume = 0
-UserSettings():GetService("UserGameSettings").SavedQualityLevel = Enum.SavedQualitySetting.QualityLevel1
 -- ฟังก์ชัน AutoEquip สำหรับการติดตั้ง Rod อัตโนมัติ
 local function AutoEquip()
     local player = game.Players.LocalPlayer
