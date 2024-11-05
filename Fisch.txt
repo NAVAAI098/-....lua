@@ -447,7 +447,7 @@ spawn(function()
             local reelGui = playerGui:FindFirstChild("reel")
             if reelGui then
                 -- เรียกฟังก์ชัน fireReelEvent เพื่อรันคำสั่ง 50 ครั้ง
-                fireReelEvent(100)
+                fireReelEvent(250)
             end
         end)
 
