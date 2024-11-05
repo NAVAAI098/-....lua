@@ -409,13 +409,13 @@ spawn(function()
                     end
                 end
 
-                -- if playerGui:FindFirstChild("reel") then
-                --     for _ = 1, 250 do
-                --         task.defer(function()
-                --             ReplicatedStorage.events.reelfinished:FireServer(100, true)
-                --         end)
-                --     end
-                -- end
+                if playerGui:FindFirstChild("reel") then
+                    for _ = 1, 250 do
+                        task.defer(function()
+                            ReplicatedStorage.events.reelfinished:FireServer(100, true)
+                        end)
+                    end
+                end
                 if not isShakeUI then
                     AutoEquip()
                     wait(0.5)
