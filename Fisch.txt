@@ -370,11 +370,11 @@ spawn(function()
                     if not isShakeUI and coins <= 2000 and not Carbon then
                         -- โทรฟังก์ชัน Teleport
                         Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
-                    elseif coins >= 2000 and not Carbon then
-                        Autorobs()
-                        if _G.Tween then
-                            _G.Tween:Cancel()
-                        end
+                    -- elseif coins >= 2000 and not Carbon then
+                    --     Autorobs()
+                    --     if _G.Tween then
+                    --         _G.Tween:Cancel()
+                    --     end
                     elseif coins >= 12000 and not playerStats.Rods:FindFirstChild("Nocturnal Rod") then
                         Autorobs()
                         if _G.Tween then
@@ -410,7 +410,7 @@ spawn(function()
                 end
 
                 -- if playerGui:FindFirstChild("reel") then
-                --     for _ = 1, 35 do
+                --     for _ = 1, 250 do
                 --         task.defer(function()
                 --             ReplicatedStorage.events.reelfinished:FireServer(100, true)
                 --         end)
@@ -431,17 +431,23 @@ spawn(function()
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
     local player = Players.LocalPlayer
     local playerGui = player:WaitForChild("PlayerGui")
+    local isShakeUI = playerGui:FindFirstChild("shakeui") ~= nil
+
+    local function fireReelEvent(times)
+        if times > 0 then
+            task.spawn(function()
+                ReplicatedStorage.events.reelfinished:FireServer(100, true)
+                fireReelEvent(times - 1) -- เรียกฟังก์ชันซ้ำ ลดจำนวนครั้งทีละ 1
+            end)
+        end
+    end
 
     while task.wait(0.1) do
         local success, errorMessage = pcall(function()
             local reelGui = playerGui:FindFirstChild("reel")
             if reelGui then
-                -- ใช้ task.spawn เพื่อให้คำสั่ง FireServer รันได้อย่างรวดเร็วและปลอดภัย
-                for _ = 1, 35 do
-                    task.spawn(function()
-                        ReplicatedStorage.events.reelfinished:FireServer(100, true)
-                    end)
-                end
+                -- เรียกฟังก์ชัน fireReelEvent เพื่อรันคำสั่ง 50 ครั้ง
+                fireReelEvent(100)
             end
         end)
 
@@ -450,6 +456,7 @@ spawn(function()
         end
     end
 end)
+
 
 
 
