@@ -367,7 +367,7 @@ spawn(function()
                 local isShakeUI = playerGui:FindFirstChild("shakeui") ~= nil
 
                 for _, rod in pairs(rods) do
-                    if not isShakeUI and coins <= 2000 and not Carbon then
+                    if not isShakeUI or coins <= 2000 or not Carbon then
                         -- โทรฟังก์ชัน Teleport
                         Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
                     -- elseif coins >= 2000 and not Carbon then
@@ -410,7 +410,7 @@ spawn(function()
                 end
 
                 if playerGui:FindFirstChild("reel") then
-                    for _ = 1, 250 do
+                    for _ = 1, 45 do
                         task.defer(function()
                             ReplicatedStorage.events.reelfinished:FireServer(100, true)
                         end)
@@ -433,21 +433,15 @@ spawn(function()
     local playerGui = player:WaitForChild("PlayerGui")
     local isShakeUI = playerGui:FindFirstChild("shakeui") ~= nil
 
-    local function fireReelEvent(times)
-        if times > 0 then
-            task.spawn(function()
-                ReplicatedStorage.events.reelfinished:FireServer(100, true)
-                fireReelEvent(times - 1) -- เรียกฟังก์ชันซ้ำ ลดจำนวนครั้งทีละ 1
-            end)
-        end
-    end
-
     while task.wait(0.1) do
         local success, errorMessage = pcall(function()
             local reelGui = playerGui:FindFirstChild("reel")
             if reelGui then
-                -- เรียกฟังก์ชัน fireReelEvent เพื่อรันคำสั่ง 50 ครั้ง
-                fireReelEvent(250)
+                for _ = 1, 45 do
+                    task.defer(function()
+                        ReplicatedStorage.events.reelfinished:FireServer(100, true)
+                    end)
+                end
             end
         end)
 
