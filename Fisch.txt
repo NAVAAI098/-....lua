@@ -409,13 +409,13 @@ spawn(function()
                     end
                 end
 
-                if playerGui:FindFirstChild("reel") then
-                    for _ = 1, 45 do
-                        task.defer(function()
-                            ReplicatedStorage.events.reelfinished:FireServer(100, true)
-                        end)
-                    end
-                end
+                -- if playerGui:FindFirstChild("reel") then
+                --     for _ = 1, 45 do
+                --         task.defer(function()
+                --             ReplicatedStorage.events.reelfinished:FireServer(100, true)
+                --         end)
+                --     end
+                -- end
                 if not isShakeUI then
                     AutoEquip()
                     wait(0.5)
@@ -433,15 +433,21 @@ spawn(function()
     local playerGui = player:WaitForChild("PlayerGui")
     local isShakeUI = playerGui:FindFirstChild("shakeui") ~= nil
 
+    local function fireReelEvent(times)
+        if times > 0 then
+            task.spawn(function()
+                ReplicatedStorage.events.reelfinished:FireServer(100, true)
+                fireReelEvent(times - 1) -- เรียกฟังก์ชันซ้ำ ลดจำนวนครั้งทีละ 1
+            end)
+        end
+    end
+
     while task.wait(0.1) do
         local success, errorMessage = pcall(function()
             local reelGui = playerGui:FindFirstChild("reel")
             if reelGui then
-                for _ = 1, 45 do
-                    task.defer(function()
-                        ReplicatedStorage.events.reelfinished:FireServer(100, true)
-                    end)
-                end
+                -- เรียกใช้ฟังก์ชัน fireReelEvent เพื่อรันคำสั่ง 50 ครั้ง
+                fireReelEvent(100)
             end
         end)
 
