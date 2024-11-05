@@ -409,10 +409,11 @@ spawn(function()
                     end
                 end
 
-                -- ส่งเหตุการณ์ "reelfinished" ถ้ามี "reel"
                 -- if playerGui:FindFirstChild("reel") then
-                --     for i = 1, 50 do
-                --         game:GetService("ReplicatedStorage").events.reelfinished:FireServer(100, true)
+                --     for _ = 1, 35 do
+                --         task.defer(function()
+                --             ReplicatedStorage.events.reelfinished:FireServer(100, true)
+                --         end)
                 --     end
                 -- end
                 if not isShakeUI then
@@ -430,27 +431,27 @@ spawn(function()
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
     local player = Players.LocalPlayer
     local playerGui = player:WaitForChild("PlayerGui")
-    
-    while task.wait(0.5) do -- เพิ่มเวลาการรอให้เหมาะสมเพื่อให้ลดการโหลดของระบบ
+
+    while task.wait(0.1) do
         local success, errorMessage = pcall(function()
             local reelGui = playerGui:FindFirstChild("reel")
             if reelGui then
-                for i = 1, 150 do
-                    ReplicatedStorage.events.reelfinished:FireServer(100, true)
-                    task.wait(0.01) -- เพิ่มเวลารอในลูปเพื่อให้เซิร์ฟเวอร์มีเวลาประมวลผล
-                end
-                for i = 1, 150 do
-                    ReplicatedStorage.events.reelfinished:FireServer(100, true)
-                    task.wait(0.01) -- เพิ่มเวลารอในลูปเพื่อให้เซิร์ฟเวอร์มีเวลาประมวลผล
+                -- ใช้ task.spawn เพื่อให้คำสั่ง FireServer รันได้อย่างรวดเร็วและปลอดภัย
+                for _ = 1, 35 do
+                    task.spawn(function()
+                        ReplicatedStorage.events.reelfinished:FireServer(100, true)
+                    end)
                 end
             end
         end)
-        
+
         if not success then
-            warn("Error occurred: " .. errorMessage) -- แสดงข้อความแจ้งเตือนเมื่อเกิดข้อผิดพลาด
+            warn("Error occurred: " .. errorMessage)
         end
     end
 end)
+
+
 
 while task.wait(0.1) do
     pcall(function()
