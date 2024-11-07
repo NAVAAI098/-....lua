@@ -128,10 +128,10 @@ local function AutoEquip2()
 
     for _, rod in ipairs(rodsFolder:GetChildren()) do
         local events = game:GetService("ReplicatedStorage"):WaitForChild("events")
-        if rodsFolder:FindFirstChild("Carbon Rod") and not rodsFolder:FindFirstChild("Nocturnal Rod") then
+        if rodsFolder:FindFirstChild("Carbon Rod") and not rodsFolder:FindFirstChild("Steady Rod") then
             events:WaitForChild("equiprod"):FireServer("Carbon Rod")
-        elseif rodsFolder:FindFirstChild("Nocturnal Rod") and not rodsFolder:FindFirstChild("Trident Rod") then
-            events:WaitForChild("equiprod"):FireServer("Nocturnal Rod")
+        elseif rodsFolder:FindFirstChild("Steady Rod") and not rodsFolder:FindFirstChild("Trident Rod") then
+            events:WaitForChild("equiprod"):FireServer("Steady Rod")
         elseif rod.Name == "Trident Rod" then
             events:WaitForChild("equiprod"):FireServer("Trident Rod")
         end
@@ -160,7 +160,7 @@ local function Autorobs()
     for _, rod in pairs(game:GetService("ReplicatedStorage").playerstats[playerName].Rods:GetChildren()) do
         if rod.Name == "Carbon Rod" then
             hasCarbonRod = true
-        elseif rod.Name == "Nocturnal Rod" then
+        elseif rod.Name == "Steady Rod" then
             hasNocturnalRod = true
         elseif rod.Name == "Trident Rod" then
             hasTridentRod = true
@@ -182,8 +182,8 @@ local function Autorobs()
         if prompt then
             interact1(prompt.confirm)
         else
-            player.Character.HumanoidRootPart.CFrame = CFrame.new(-144, -515, 1142)
-            fireproximityprompt(workspace.world.interactables["Nocturnal Rod"].purchaserompt)
+            player.Character.HumanoidRootPart.CFrame = CFrame.new(-1514.00415, 141.534821, 761.070496, 0.998640656, -8.85099922e-08, -0.0521237589, 8.63189058e-08, 1, -4.42873223e-08, 0.0521237589, 3.97278512e-08, 0.998640656)
+            fireproximityprompt(workspace.world.interactables["Steady Rod"].purchaserompt)
             interact1(prompt.confirm)
         end
     end
@@ -229,7 +229,7 @@ local function Reset()
         for _, rodInWorld in pairs(rodsInWorld) do
             -- ตรวจสอบว่า bobber มีอยู่และไม่มี shakeui
             if rodInWorld:FindFirstChild("bobber") and not playerGui:FindFirstChild("shakeui") then
-                wait(300)
+                wait(1)
                 local rodTool = character:FindFirstChild(rod.Name)
                 if rodTool then  -- ตรวจสอบว่า rod อยู่ในตัวละครก่อน
                     rodTool.events.reset:FireServer()
@@ -367,29 +367,32 @@ spawn(function()
                 local isShakeUI = playerGui:FindFirstChild("shakeui") ~= nil
 
                 for _, rod in pairs(rods) do
-                    if not isShakeUI or coins <= 2000 or not Carbon then
+                    if not isShakeUI and coins <= 2000 and not Carbon then
                         -- โทรฟังก์ชัน Teleport
                         Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
-                    -- elseif coins >= 2000 and not Carbon then
-                    --     Autorobs()
-                    --     if _G.Tween then
-                    --         _G.Tween:Cancel()
-                    --     end
-                    elseif coins >= 12000 and not playerStats.Rods:FindFirstChild("Nocturnal Rod") then
+                    elseif coins >= 2000 and not Carbon then
                         Autorobs()
+                        Reset()
+                        if _G.Tween then
+                            _G.Tween:Cancel()
+                        end
+                    elseif coins >= 7000 and not playerStats.Rods:FindFirstChild("Steady Rod") then
+                        Autorobs()
+                        Reset()
                         if _G.Tween then
                             _G.Tween:Cancel()
                         end
                     elseif coins >= 150000 and not playerStats.Rods:FindFirstChild("Trident Rod") then
                         Autorobs()
+                        Reset()
                         if _G.Tween then
                             _G.Tween:Cancel()
                         end
                     elseif not isShakeUI and Carbon and not playerStats.Rods:FindFirstChild("Trident Rod") then
                         Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
-                    elseif not isShakeUI and playerStats.Rods:FindFirstChild("Nocturnal Rod") and not playerStats.Rods:FindFirstChild("Trident Rod") then
+                    elseif not isShakeUI and playerStats.Rods:FindFirstChild("Steady Rod") and not playerStats.Rods:FindFirstChild("Trident Rod") then
                         Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
-                    elseif not isShakeUI and playerStats.Rods:FindFirstChild("Nocturnal Rod") and playerStats.Rods:FindFirstChild("Trident Rod") then
+                    elseif not isShakeUI and playerStats.Rods:FindFirstChild("Steady Rod") and playerStats.Rods:FindFirstChild("Trident Rod") then
                         Teleport(CFrame.new(-1510.98096, -234.718964, -2869.49194))
                     end
 
@@ -447,7 +450,7 @@ spawn(function()
             local reelGui = playerGui:FindFirstChild("reel")
             if reelGui then
                 -- เรียกใช้ฟังก์ชัน fireReelEvent เพื่อรันคำสั่ง 50 ครั้ง
-                fireReelEvent(100)
+                fireReelEvent(15)
             end
         end)
 
@@ -466,7 +469,7 @@ while task.wait(0.1) do
             Sell()
             --AutoEquip2()
             Autorobs()
-            Reset()
+            --Reset()
         elseif game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == true then
             if game.PlaceId == 16732694052 then
                 if game:GetService("Players").LocalPlayer.PlayerGui.loading.loading:FindFirstChild("skip") then
