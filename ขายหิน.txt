@@ -1,0 +1,136 @@
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local playerName = player.Name
+
+local function comma(number)
+	local formatted = tostring(number)
+	while true do
+		formatted, count = string.gsub(formatted, "^(-?%d+)(%d%d%d)", "%1,%2")
+		if count == 0 then
+			break
+		end
+	end
+	return formatted
+end
+
+-- ฟังก์ชันสร้าง GUI และแสดง stackValue
+local function createGui(stackValue)
+    local playerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    local existingGui = playerGui:FindFirstChild("kaitun - budget")
+    
+    if existingGui then
+        existingGui:Destroy()
+    end
+
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "kaitun - budget"
+    ScreenGui.Parent = playerGui
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.DisplayOrder = 999
+    ScreenGui.ResetOnSpawn = false
+    ScreenGui.IgnoreGuiInset = true
+
+    local Frame = Instance.new("Frame")
+    Frame.Parent = ScreenGui
+    Frame.Active = false
+    Frame.AnchorPoint = Vector2.new(0.5, 0.5)
+    Frame.BackgroundColor3 = Color3.fromRGB(7, 7, 7)
+    Frame.BackgroundTransparency = 1
+    Frame.Position = UDim2.new(0.5, 0, 0.5, 0)
+    Frame.Size = UDim2.new(1, 0, 1, 0)
+
+    local TextLabel = Instance.new("TextLabel")
+    TextLabel.Parent = Frame
+    TextLabel.Active = true
+    TextLabel.BackgroundTransparency = 1
+    TextLabel.Position = UDim2.new(0.52, 0, 0.32, 0)
+    TextLabel.Size = UDim2.new(0.38, 0, 0.36, 0)
+    TextLabel.Font = Enum.Font.FredokaOne
+    TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TextLabel.TextScaled = true
+    TextLabel.Text = "หิน: " .. comma(stackValue or 0)
+    TextLabel.TextWrapped = true
+    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+    local ImageLabel = Instance.new("ImageLabel")
+    ImageLabel.Parent = Frame
+    ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+    ImageLabel.BackgroundTransparency = 1
+    ImageLabel.Position = UDim2.new(0.42, 0, 0.5, 0)
+    ImageLabel.Size = UDim2.new(0.18, 0, 0.38, 0)
+    ImageLabel.Image = "rbxassetid://17758801602"
+
+    return TextLabel
+end
+
+-- ฟังก์ชันอัปเดตค่า stackValue ใน GUI
+local function updateGui(TextLabel, stackValue)
+    TextLabel.Text = "หิน: " .. comma(stackValue or 0)
+end
+
+-- สร้าง GUI และเริ่ม coroutine เพื่อตรวจสอบค่า stackValue
+local function monitorStackValue()
+    local guiCreated = false
+    local TextLabel
+    
+    while true do
+        -- ตรวจสอบ stackValue ของ item ที่มีชื่อ "Enchant"
+        for _, v in pairs(game:GetService("ReplicatedStorage").playerstats[playerName].Inventory:GetChildren()) do
+            if string.find(v.Name, "Enchant") then
+                local stackValue = v:FindFirstChild("Stack") and v.Stack.Value
+                if stackValue then
+                    print("Stack Value:", stackValue)
+
+                    -- สร้าง GUI ครั้งแรก
+                    if not guiCreated then
+                        TextLabel = createGui(stackValue)
+                        guiCreated = true
+                    end
+
+                    -- อัปเดต GUI
+                    updateGui(TextLabel, stackValue)
+                end
+            end
+        end
+
+        -- รอ 1 วินาทีแล้วตรวจสอบค่าใหม่
+        wait(1)
+    end
+end
+
+coroutine.wrap(monitorStackValue)()
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local playerName = player.Name
+
+local function setAutoSellSettings()
+    local settings = game:GetService("ReplicatedStorage").playerstats[playerName].Settings
+    local autoSellOptions = {
+        "willautosell_event",
+        "willautosell_legendary",
+        "willautosell_mythical"
+    }
+
+    -- loop ผ่านตัวเลือกและตรวจสอบค่าทีละตัว
+    for _, option in ipairs(autoSellOptions) do
+        if settings[option].Value == false then
+            settings[option].Value = true
+            return option, settings[option].Value
+        end
+    end
+end
+
+
+
+if game.PlaceId == 16732694052 then
+    while wait(0.1) do
+        if not workspace.world.npcs:FindFirstChild("Max Merchant") then
+            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-928, 131, -1109)
+        else
+            setAutoSellSettings()
+            workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Max Merchant"):WaitForChild("merchant"):WaitForChild("sellall"):InvokeServer()
+            workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Merlin"):WaitForChild("Merlin"):WaitForChild("power"):InvokeServer()
+        end
+    end
+end
