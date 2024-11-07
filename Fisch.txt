@@ -177,7 +177,7 @@ local function Autorobs()
             interact1(prompt.confirm)
         end
     end
-    if not hasNocturnalRod and coins >= 12000 then
+    if not hasNocturnalRod and coins >= 7000 then
         local prompt = player.PlayerGui:FindFirstChild("over") and player.PlayerGui.over:FindFirstChild("prompt")
         if prompt then
             interact1(prompt.confirm)
