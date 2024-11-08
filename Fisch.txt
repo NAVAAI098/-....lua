@@ -182,7 +182,7 @@ local function Autorobs()
         if prompt then
             interact1(prompt.confirm)
         else
-            player.Character.HumanoidRootPart.CFrame = CFrame.new(-1514.00415, 141.534821, 761.070496, 0.998640656, -8.85099922e-08, -0.0521237589, 8.63189058e-08, 1, -4.42873223e-08, 0.0521237589, 3.97278512e-08, 0.998640656)
+            player.Character.HumanoidRootPart.CFrame = CFrame.new(-144, -515, 1142)
             fireproximityprompt(workspace.world.interactables["Nocturnal Rod"].purchaserompt)
             interact1(prompt.confirm)
         end
