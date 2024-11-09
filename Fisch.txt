@@ -376,7 +376,7 @@ spawn(function()
                         if _G.Tween then
                             _G.Tween:Cancel()
                         end
-                    elseif coins >= 7000 and not playerStats.Rods:FindFirstChild("Nocturnal Rod") then
+                    elseif coins >= 12000 and not playerStats.Rods:FindFirstChild("Nocturnal Rod") then
                         Autorobs()
                         Reset()
                         if _G.Tween then
