@@ -175,7 +175,7 @@ local function checkAndFireReel(player)
     local playerGui = player.PlayerGui
     local reelGui = playerGui:FindFirstChild("reel")
     if reelGui then
-        fireReelEvent(15)  -- เรียกใช้ฟังก์ชัน fireReelEvent เพื่อยิงเหตุการณ์
+        fireReelEvent(5)  -- เรียกใช้ฟังก์ชัน fireReelEvent เพื่อยิงเหตุการณ์
     end
 end
 
