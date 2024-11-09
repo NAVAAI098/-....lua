@@ -268,7 +268,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
     end
 end)
 spawn(function()
-    while task.wait(1) do
+    while wait(3) do
         local success, errorMsg = pcall(function()
             local player = game:GetService("Players").LocalPlayer
             local playerGui = player.PlayerGui
