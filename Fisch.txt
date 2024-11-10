@@ -229,7 +229,7 @@ local function Reset()
         for _, rodInWorld in pairs(rodsInWorld) do
             -- ตรวจสอบว่า bobber มีอยู่และไม่มี shakeui
             if rodInWorld:FindFirstChild("bobber") and not playerGui:FindFirstChild("shakeui") then
-                wait(1)
+                wait(10)
                 local rodTool = character:FindFirstChild(rod.Name)
                 if rodTool then  -- ตรวจสอบว่า rod อยู่ในตัวละครก่อน
                     rodTool.events.reset:FireServer()
