@@ -455,9 +455,30 @@ spawn(function()
 end)
 
 
-while wait(0.1) do
+while wait(1) do
     pcall(function()
-        sell()
+        if game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == false then
+            Sell()
+            --Reset()
+        elseif game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == true then
+            if game.PlaceId == 16732694052 then
+                if game:GetService("Players").LocalPlayer.PlayerGui.loading.loading:FindFirstChild("skip") then
+                    interact1(game:GetService("Players").LocalPlayer.PlayerGui.loading.loading.skip)
+                end
+                if game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == true then
+                    game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, true, nil, 1)
+                    game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1)
+                    return
+                end
+                local playerStats = game:GetService("ReplicatedStorage"):WaitForChild("playerstats"):WaitForChild(playerName)
+                if playerStats and playerStats.Settings.showflags then
+                    local showFlags = playerStats.Settings.showflags
+                    if showFlags.Value == true then
+                        showFlags.Value = false
+                    end
+                end
+            end
+        end
     end)
 end
 
