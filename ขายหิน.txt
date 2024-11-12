@@ -122,6 +122,17 @@ local function setAutoSellSettings()
 end
 
 
+local function interact1(path)
+    if path then
+        game:GetService("GuiService").SelectedObject = path
+        task.wait(0.1)
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+        task.wait(0.1)
+        game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+        task.wait(0.1)
+        game:GetService("GuiService").SelectedObject = nil
+    end
+end
 
 if game.PlaceId == 16732694052 then
     while wait(0.1) do
