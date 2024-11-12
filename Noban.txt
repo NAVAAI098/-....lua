@@ -481,7 +481,9 @@ end)
 
 while wait(1) do
     pcall(function()
-        if game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == true then
+        if game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == false then
+            Reset2()
+        elseif game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == true then
             if game.PlaceId == 16732694052 then
                 if game:GetService("Players").LocalPlayer.PlayerGui.loading.loading:FindFirstChild("skip") then
                     interact1(game:GetService("Players").LocalPlayer.PlayerGui.loading.loading.skip)
