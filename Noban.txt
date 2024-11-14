@@ -409,7 +409,7 @@ spawn(function()
 
                     -- ส่งเหตุการณ์ cast ไปยังเซิร์ฟเวอร์ถ้า NPC คือ "Mel Merchant"
                     for _, NPC in pairs(NPCs) do
-                        if NPC.Name == "Mel Merchant" and character:FindFirstChild(rod.Name) then
+                        if NPC.Name == "Mel Merchant" and character:FindFirstChild(rod.Name) and not isShakeUI then
                             local args = {100, 1}
                             character[rod.Name].events.cast:FireServer(unpack(args))
                         end
