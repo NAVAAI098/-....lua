@@ -363,7 +363,7 @@ spawn(function()
     local player = Players.LocalPlayer
     local playerGui = player:WaitForChild("PlayerGui")
 
-    while wait(0.1) do
+    while wait(1) do
         pcall(function()
             if game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == false then
                 local character = player.Character or player.CharacterAdded:Wait()
