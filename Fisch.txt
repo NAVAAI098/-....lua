@@ -409,6 +409,12 @@ spawn(function()
                             elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Nautilus") then
                                 game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Nautilus"))
                                 workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
+                            elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Mutated Shark") then
+                                game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Mutated Shark"))
+                                workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
+                            elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Ancient Eel") then
+                                game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Ancient Eel"))
+                                workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
                             end
                             AutoEquip2()
                             local npc = workspace.world.npcs["Milo Merchant"]
