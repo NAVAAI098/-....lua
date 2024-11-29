@@ -117,10 +117,10 @@ local function AutoEquip2()
 
     for _, rod in ipairs(rodsFolder:GetChildren()) do
         local events = game:GetService("ReplicatedStorage"):WaitForChild("events")
-        if rodsFolder:FindFirstChild("Carbon Rod") and not rodsFolder:FindFirstChild("Nocturnal1 Rod") then
+        if rodsFolder:FindFirstChild("Carbon Rod") and not rodsFolder:FindFirstChild("Trident Rod") then
             events:WaitForChild("equiprod"):FireServer("Carbon Rod")
-        elseif rodsFolder:FindFirstChild("Nocturnal1 Rod") and not rodsFolder:FindFirstChild("Trident Rod") then
-            events:WaitForChild("equiprod"):FireServer("Nocturnal1 Rod")
+        -- elseif rodsFolder:FindFirstChild("Nocturnal1 Rod") and not rodsFolder:FindFirstChild("Trident Rod") then
+        --     events:WaitForChild("equiprod"):FireServer("Nocturnal1 Rod")
         elseif rodsFolder:FindFirstChild("Trident Rod") then
             events:WaitForChild("equiprod"):FireServer("Trident Rod")
         end
@@ -148,6 +148,29 @@ local function Reset2()
         end
     end
 end
+
+local function Reset()
+    local player = game:GetService("Players").LocalPlayer
+    local playerName = player.Name
+    local playerGui = player.PlayerGui
+    local rods = game:GetService("ReplicatedStorage").playerstats[playerName].Rods:GetChildren()
+    local rodsInWorld = workspace[playerName]:GetChildren()  -- เปลี่ยนชื่อเป็น rodsInWorld
+    local character = player.Character
+
+    for _, rod in pairs(rods) do
+        for _, rodInWorld in pairs(rodsInWorld) do
+            -- ตรวจสอบว่า bobber มีอยู่และไม่มี shakeui
+            if rodInWorld:FindFirstChild("bobber") and not playerGui:FindFirstChild("shakeui") then
+                wait(1)
+                local rodTool = character:FindFirstChild(rod.Name)
+                if rodTool then  -- ตรวจสอบว่า rod อยู่ในตัวละครก่อน
+                    rodTool.events.reset:FireServer()
+                end
+            end
+        end
+    end
+end
+
 
 function Teleport(targetCFrame)
     local player = game.Players.LocalPlayer
@@ -318,9 +341,9 @@ spawn(function()
                         local rodName = rod.Name
                         if coins <= 2000 and not playerStats.Rods:FindFirstChild("Carbon Rod") and not isShakeUI then
                             Teleport(CFrame.new(939.354431, -738.08197, 1457.44556, -0.991571009, -1.55779851e-08, 0.129564434, -1.45141978e-08, 1, 9.15472853e-09, -0.129564434, 7.19703941e-09, -0.991571009))
-                        elseif not isShakeUI and playerStats.Rods:FindFirstChild("Nocturnal Rod") and not playerStats.Rods:FindFirstChild("Trident Rod") then
+                        elseif not isShakeUI and playerStats.Rods:FindFirstChild("Carbon Rod") and not playerStats.Rods:FindFirstChild("Trident Rod") then
                             Teleport(CFrame.new(939.354431, -738.08197, 1457.44556, -0.991571009, -1.55779851e-08, 0.129564434, -1.45141978e-08, 1, 9.15472853e-09, -0.129564434, 7.19703941e-09, -0.991571009))
-                        elseif not isShakeUI and playerStats.Rods:FindFirstChild("Nocturnal Rod") and playerStats.Rods:FindFirstChild("Trident Rod") then
+                        elseif not isShakeUI and playerStats.Rods:FindFirstChild("Carbon Rod") and playerStats.Rods:FindFirstChild("Trident Rod") then
                             Teleport(CFrame.new(939.354431, -738.08197, 1457.44556, -0.991571009, -1.55779851e-08, 0.129564434, -1.45141978e-08, 1, 9.15472853e-09, -0.129564434, 7.19703941e-09, -0.991571009))
                         end
                         if coins >= 2000 and not playerStats.Rods:FindFirstChild("Carbon Rod") then
@@ -408,7 +431,7 @@ spawn(function()
 end)
 
 
-while wait(1) do
+while wait(3) do
     pcall(function()
         if game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == true then
             if game.PlaceId == 16732694052 then
