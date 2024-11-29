@@ -397,6 +397,19 @@ spawn(function()
                             end
                         end
                         if not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("shakeui") then
+                            if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Barreleye Fish") then
+                                game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Barreleye Fish"))
+                                workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
+                            elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Sea Snake") then
+                                game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Sea Snake"))
+                                workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
+                            elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Small Spine Chimera") then
+                                game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Small Spine Chimera"))
+                                workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
+                            elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Nautilus") then
+                                game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Nautilus"))
+                                workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
+                            end
                             AutoEquip2()
                             local npc = workspace.world.npcs["Milo Merchant"]
                             if npc then
