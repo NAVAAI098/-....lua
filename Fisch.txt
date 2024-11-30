@@ -132,8 +132,6 @@ local function AutoEquip2()
         local events = game:GetService("ReplicatedStorage"):WaitForChild("events")
         if rodsFolder:FindFirstChild("Carbon Rod") and not rodsFolder:FindFirstChild("Trident Rod") then
             events:WaitForChild("equiprod"):FireServer("Carbon Rod")
-        -- elseif rodsFolder:FindFirstChild("Nocturnal1 Rod") and not rodsFolder:FindFirstChild("Trident Rod") then
-        --     events:WaitForChild("equiprod"):FireServer("Nocturnal1 Rod")
         elseif rodsFolder:FindFirstChild("Trident Rod") then
             events:WaitForChild("equiprod"):FireServer("Trident Rod")
         end
@@ -163,25 +161,8 @@ local function Reset2()
 end
 
 local function Reset()
-    local player = game:GetService("Players").LocalPlayer
-    local playerName = player.Name
-    local playerGui = player.PlayerGui
-    local rods = game:GetService("ReplicatedStorage").playerstats[playerName].Rods:GetChildren()
-    local rodsInWorld = workspace[playerName]:GetChildren()  -- เปลี่ยนชื่อเป็น rodsInWorld
-    local character = player.Character
-
-    for _, rod in pairs(rods) do
-        for _, rodInWorld in pairs(rodsInWorld) do
-            -- ตรวจสอบว่า bobber มีอยู่และไม่มี shakeui
-            if rodInWorld:FindFirstChild("bobber") and not playerGui:FindFirstChild("shakeui") then
-                wait(1)
-                local rodTool = character:FindFirstChild(rod.Name)
-                if rodTool then  -- ตรวจสอบว่า rod อยู่ในตัวละครก่อน
-                    rodTool.events.reset:FireServer()
-                end
-            end
-        end
-    end
+    game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, true, nil, 1)
+    game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1)  
 end
 
 
@@ -274,16 +255,16 @@ local function Autorobs()
             interact1(prompt.confirm)
         end
     end
-    if not hasNocturnalRod and coins >= 12000 then
-        local prompt = player.PlayerGui:FindFirstChild("over") and player.PlayerGui.over:FindFirstChild("prompt")
-        if prompt then
-            interact1(prompt.confirm)
-        else
-            player.Character.HumanoidRootPart.CFrame = CFrame.new(-144, -515, 1142)
-            fireproximityprompt(workspace.world.interactables["Nocturnal Rod"].purchaserompt)
-            interact1(prompt.confirm)
-        end
-    end
+    -- if not hasNocturnalRod and coins >= 12000 then
+    --     local prompt = player.PlayerGui:FindFirstChild("over") and player.PlayerGui.over:FindFirstChild("prompt")
+    --     if prompt then
+    --         interact1(prompt.confirm)
+    --     else
+    --         player.Character.HumanoidRootPart.CFrame = CFrame.new(-144, -515, 1142)
+    --         fireproximityprompt(workspace.world.interactables["Nocturnal Rod"].purchaserompt)
+    --         interact1(prompt.confirm)
+    --     end
+    -- end
     if not hasKingsRod and coins >= 120000 and playerStats.Rods:FindFirstChild("Trident Rod") then
         local prompt = player.PlayerGui:FindFirstChild("over") and player.PlayerGui.over:FindFirstChild("prompt")
         if prompt then
@@ -316,6 +297,13 @@ local function Autorobs()
     end
 end
 
+local function Click()
+    local virtualInput = game:GetService("VirtualInputManager")
+    virtualInput:SendKeyEvent(true, Enum.KeyCode.E, false, game)
+    wait(0.05)
+    virtualInput:SendKeyEvent(false, Enum.KeyCode.E, false, game)
+    wait(0.05)
+end
 
 local function interact(path)
     if path then
@@ -359,25 +347,25 @@ spawn(function()
                         elseif not isShakeUI and playerStats.Rods:FindFirstChild("Carbon Rod") and playerStats.Rods:FindFirstChild("Trident Rod") then
                             Teleport(CFrame.new(939.354431, -738.08197, 1457.44556, -0.991571009, -1.55779851e-08, 0.129564434, -1.45141978e-08, 1, 9.15472853e-09, -0.129564434, 7.19703941e-09, -0.991571009))
                         end
-                        if coins >= 2000 and not playerStats.Rods:FindFirstChild("Carbon Rod") then
+                        if coins >= 2000 and not playerStats.Rods:FindFirstChild("Carbon Rod") and not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("shakeui") then
                             Autorobs()
                             Reset()
                             if _G.Tween then
                                 _G.Tween:Cancel()
                             end
-                        elseif coins >= 12000 and not playerStats.Rods:FindFirstChild("Nocturnal Rod") then
+                        -- elseif coins >= 12000 and not playerStats.Rods:FindFirstChild("Nocturnal Rod") then
+                        --     Autorobs()
+                        --     Reset()
+                        --     if _G.Tween then
+                        --         _G.Tween:Cancel()
+                        --     end
+                        elseif coins >= 150000 and not playerStats.Rods:FindFirstChild("Trident Rod") and not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("shakeui") then
                             Autorobs()
                             Reset()
                             if _G.Tween then
                                 _G.Tween:Cancel()
                             end
-                        elseif coins >= 150000 and not playerStats.Rods:FindFirstChild("Trident Rod") then
-                            Autorobs()
-                            Reset()
-                            if _G.Tween then
-                                _G.Tween:Cancel()
-                            end
-                        elseif coins >= 120000 and playerStats.Rods:FindFirstChild("Trident Rod") and not playerStats.Rods:FindFirstChild("Kings Rod") then
+                        elseif coins >= 120000 and playerStats.Rods:FindFirstChild("Trident Rod") and not playerStats.Rods:FindFirstChild("Kings Rod") and not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("shakeui") then
                             Autorobs()
                             Reset()
                             if _G.Tween then
@@ -429,27 +417,33 @@ spawn(function()
                             end
                         end
                         if not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("shakeui") and workspace.world.npcs:FindFirstChild("Milo Merchant") then
-                            AutoEquip2()
                             local npc = workspace.world.npcs["Milo Merchant"]
                             if npc then
                                 npc:SetPrimaryPartCFrame(CFrame.new(939.741516, -738.085693, 1458.93274))
                             end
+                            Click()
                             if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Barreleye Fish") then
+                                Click()
                                 game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Barreleye Fish"))
                                 workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
                             elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Sea Snake") then
+                                Click()
                                 game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Sea Snake"))
                                 workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
                             elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Small Spine Chimera") then
+                                Click()
                                 game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Small Spine Chimera"))
                                 workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
                             elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Nautilus") then
+                                Click()
                                 game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Nautilus"))
                                 workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
                             elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Mutated Shark") then
+                                Click()
                                 game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Mutated Shark"))
                                 workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
                             elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Ancient Eel") then
+                                Click()
                                 game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Ancient Eel"))
                                 workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
                             end
@@ -472,6 +466,7 @@ spawn(function()
                         elseif game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("reel") then
                             game:GetService("ReplicatedStorage").events.reelfinished:FireServer(100,true)
                         else
+                            AutoEquip2()
                             game:GetService("Players").LocalPlayer.Character:FindFirstChild(rodName).events.cast:FireServer(100,1)
                         end
                     end
@@ -497,7 +492,6 @@ while wait(3) do
                 end
             end
         elseif game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == false then
-            AutoEquip2()
             AutoEquip()
             Reset2()
         end
