@@ -71,7 +71,10 @@ settings().Physics.PhysicsEnvironmentalThrottle = 1
 
 UserSettings():GetService("UserGameSettings").MasterVolume = 0
 UserSettings():GetService("UserGameSettings").SavedQualityLevel = Enum.SavedQualitySetting.QualityLevel1
+local isEquipping = false -- ตัวแปรควบคุมสถานะ
+
 local function AutoEquip()
+    isEquipping = true -- เปิดใช้งานการ AutoEquip
     local player = game.Players.LocalPlayer
     local character = player.Character or player.CharacterAdded:Wait()
     local humanoid = character:FindFirstChildOfClass("Humanoid")
@@ -87,7 +90,12 @@ local function AutoEquip()
         return
     end
     local RunService = game:GetService("RunService")
-    RunService.Heartbeat:Connect(function()
+    local connection
+    connection = RunService.Heartbeat:Connect(function()
+        if not isEquipping then
+            connection:Disconnect() -- หยุดการทำงานถ้าสถานะถูกปิด
+            return
+        end
         pcall(function()
             local backpack = player:FindFirstChild("Backpack")
             if backpack then
@@ -101,6 +109,11 @@ local function AutoEquip()
         end)
     end)
 end
+
+local function CancelEquip()
+    isEquipping = false -- ปิดสถานะการ AutoEquip
+end
+
 
 local function AutoEquip2()
     local player = game:GetService("Players").LocalPlayer
@@ -370,20 +383,39 @@ spawn(function()
                             if _G.Tween then
                                 _G.Tween:Cancel()
                             end
-                        elseif coins >= 600000 and playerStats.Rods:FindFirstChild("Trident Rod") and playerStats.Rods:FindFirstChild("Kings Rod") and not playerStats.Rods:FindFirstChild("Aurora Rod") and not game:GetService("Players")[playerName].Backpack("Aurora Totem"):FindFirstChild("Aurora Totem") and game:GetService("ReplicatedStorage").world.cycle.Value == "Night" then
+                        elseif coins >= 600000 
+                            and not playerStats.Rods:FindFirstChild("Aurora Rod") 
+                            and not game:GetService("Players")[playerName].Backpack:FindFirstChild("Aurora Totem") 
+                            and game:GetService("ReplicatedStorage").world.cycle.Value == "Night" then
+                            
+                            -- Teleport ไปยังตำแหน่ง
                             Teleport(CFrame.new(-1811, -137, -3283))
-                            fireproximityprompt(workspace.world.interactables["Aurora Totem"].purchaserompt)
-                            interact1(game:GetService("Players")[playerName].PlayerGui.over.prompt.confirm)
+                            
+                            -- เรียกใช้งาน ProximityPrompt
+                            local auroraTotem = workspace.world.interactables:FindFirstChild("Aurora Totem")
+                            if auroraTotem and auroraTotem:FindFirstChild("ProximityPrompt") then
+                                fireproximityprompt(auroraTotem.ProximityPrompt)
+                            end
+                        
+                            -- ยืนยันการซื้อผ่าน GUI
+                            local playerGui = game:GetService("Players")[playerName].PlayerGui
+                            if playerGui and playerGui:FindFirstChild("over") and playerGui.over:FindFirstChild("prompt") then
+                                local confirmButton = playerGui.over.prompt:FindFirstChild("confirm")
+                                if confirmButton then
+                                    interact1(confirmButton)
+                                end
+                            end
+                        
+                            -- Reset ตัวละคร
                             Reset()
+                        
+                            -- ยกเลิก Tween หากมี
                             if _G.Tween then
                                 _G.Tween:Cancel()
                             end
                         elseif not playerStats.Rods:FindFirstChild("Aurora Rod") and game:GetService("Players")[playerName].Backpack:FindFirstChild("Aurora Totem") and game:GetService("ReplicatedStorage").world.cycle.Value == "Night" then
-                            local args = {
-                                [1] = game:GetService("Players").LocalPlayer.Character:FindFirstChild("Aurora Totem")
-                            }
-                            
-                            game:GetService("Players").LocalPlayer:WaitForChild("equip"):FireServer(unpack(args))
+                            CancelEquip()
+                            game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Aurora Totem"))
                             game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, true, nil, 1)
                             game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1)       
                             if _G.Tween then
@@ -396,7 +428,12 @@ spawn(function()
                                 _G.Tween:Cancel()
                             end
                         end
-                        if not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("shakeui") then
+                        if not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("shakeui") and workspace.world.npcs:FindFirstChild("Milo Merchant") then
+                            AutoEquip2()
+                            local npc = workspace.world.npcs["Milo Merchant"]
+                            if npc then
+                                npc:SetPrimaryPartCFrame(CFrame.new(939.741516, -738.085693, 1458.93274))
+                            end
                             if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Barreleye Fish") then
                                 game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Barreleye Fish"))
                                 workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
@@ -415,11 +452,6 @@ spawn(function()
                             elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Ancient Eel") then
                                 game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Ancient Eel"))
                                 workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
-                            end
-                            AutoEquip2()
-                            local npc = workspace.world.npcs["Milo Merchant"]
-                            if npc then
-                                npc:SetPrimaryPartCFrame(CFrame.new(939.741516, -738.085693, 1458.93274))
                             end
                             local virtualInput = game:GetService("VirtualInputManager")
                             virtualInput:SendKeyEvent(true, Enum.KeyCode.E, false, game)
@@ -453,6 +485,7 @@ end)
 while wait(3) do
     pcall(function()
         if game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == true then
+            Wait(10)
             if game.PlaceId == 16732694052 then
                 if game:GetService("Players").LocalPlayer.PlayerGui.loading.loading:FindFirstChild("skip") then
                     interact(game:GetService("Players").LocalPlayer.PlayerGui.loading.loading.skip)
