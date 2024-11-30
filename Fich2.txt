@@ -139,25 +139,9 @@ local function AutoEquip2()
 end
 
 local function Reset2()
-    local player = game:GetService("Players").LocalPlayer
-    local playerName = player.Name
-    local playerGui = player.PlayerGui
-    local rods = game:GetService("ReplicatedStorage").playerstats[playerName].Rods:GetChildren()
-    local rodsInWorld = workspace[playerName]:GetChildren()  -- เปลี่ยนชื่อเป็น rodsInWorld
-    local character = player.Character
-
-    for _, rod in pairs(rods) do
-        for _, rodInWorld in pairs(rodsInWorld) do
-            -- ตรวจสอบว่า bobber มีอยู่และไม่มี shakeui
-            if rodInWorld:FindFirstChild("bobber") and not playerGui:FindFirstChild("shakeui") then
-                wait(300)
-                local rodTool = character:FindFirstChild(rod.Name)
-                if rodTool then  -- ตรวจสอบว่า rod อยู่ในตัวละครก่อน
-                    rodTool.events.reset:FireServer()
-                end
-            end
-        end
-    end
+    Wait(300)
+    game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, true, nil, 1)
+    game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1) 
 end
 
 local function Reset()
