@@ -138,15 +138,29 @@ local function AutoEquip2()
     end
 end
 
-local function Reset2()
-    wait(300)
-    game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, true, nil, 1)
-    game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1)  
+local function UnEquipAll2()
+    task.wait(120) -- รอ 2 นาที
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid:UnequipTools() -- เลิกถือไอเทมทั้งหมด
+    end
+end
+
+
+local function UnEquipAll()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid:UnequipTools() -- เลิกถือไอเทมทั้งหมด
+    end
 end
 
 local function Reset()
     game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, true, nil, 1)
-    game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1)  
+    game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1)
 end
 
 
@@ -333,7 +347,7 @@ spawn(function()
                         end
                         if coins >= 2000 and not playerStats.Rods:FindFirstChild("Carbon Rod") and not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("shakeui") then
                             Autorobs()
-                            Reset()
+                            UnEquipAll()
                             if _G.Tween then
                                 _G.Tween:Cancel()
                             end
@@ -345,13 +359,13 @@ spawn(function()
                         --     end
                         elseif coins >= 150000 and not playerStats.Rods:FindFirstChild("Trident Rod") and not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("shakeui") then
                             Autorobs()
-                            Reset()
+                            UnEquipAll()
                             if _G.Tween then
                                 _G.Tween:Cancel()
                             end
                         elseif coins >= 120000 and playerStats.Rods:FindFirstChild("Trident Rod") and not playerStats.Rods:FindFirstChild("Kings Rod") and not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("shakeui") then
                             Autorobs()
-                            Reset()
+                            UnEquipAll()
                             if _G.Tween then
                                 _G.Tween:Cancel()
                             end
@@ -375,7 +389,7 @@ spawn(function()
                             end
                         
                             -- Reset ตัวละคร
-                            Reset()
+                            UnEquipAll()
                         
                             -- ยกเลิก Tween หากมี
                             if _G.Tween then
@@ -384,14 +398,15 @@ spawn(function()
                         elseif not playerStats.Rods:FindFirstChild("Aurora Rod") and game:GetService("Players")[playerName].Backpack:FindFirstChild("Aurora Totem") and game:GetService("ReplicatedStorage").world.cycle.Value == "Night" then
                             CancelEquip()
                             game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Aurora Totem"))
+                            wait(3)
                             game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, true, nil, 1)
-                            game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1)       
+                            game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1)
                             if _G.Tween then
                                 _G.Tween:Cancel()
                             end
                         elseif coins >= 90000 and playerStats.Rods:FindFirstChild("Trident Rod") and playerStats.Rods:FindFirstChild("Kings Rod") and game:GetService("ReplicatedStorage").world.cycle.Value == "Night" and game:GetService("ReplicatedStorage").world.weather.Value == "Aurora_Borealis" and not playerStats.Rods:FindFirstChild("Aurora Rod") then
                             Autorobs()
-                            Reset()
+                            UnEquipAll()
                             if _G.Tween then
                                 _G.Tween:Cancel()
                             end
@@ -473,7 +488,7 @@ while wait(3) do
             end
         elseif game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == false then
             AutoEquip()
-            Reset2()
+            UnEquipAll2()
         end
     end)
 end
