@@ -141,7 +141,7 @@ local function AutoEquip2()
 end
 
 local function UnEquipAll2()
-    task.wait(120) -- รอ 2 นาที
+    task.wait(300) -- รอ 2 นาที
     local player = game.Players.LocalPlayer
     local character = player.Character or player.CharacterAdded:Wait()
     local humanoid = character:FindFirstChildOfClass("Humanoid")
@@ -341,11 +341,11 @@ spawn(function()
                     if string.find(rod.Name,"Rod") then
                         local rodName = rod.Name
                         if coins <= 2000 and not playerStats.Rods:FindFirstChild("Carbon Rod") and not isShakeUI then
-                            Teleport(CFrame.new(939.354431, -738.08197, 1457.44556, -0.991571009, -1.55779851e-08, 0.129564434, -1.45141978e-08, 1, 9.15472853e-09, -0.129564434, 7.19703941e-09, -0.991571009))
+                            Teleport(CFrame.new(-2675.09766, 164.75061, 1757.24365, 0.138901547, 8.41644479e-08, 0.990306199, 1.40240708e-08, 1, -8.69553389e-08, -0.990306199, 2.59663562e-08, 0.138901547))
                         elseif not isShakeUI and playerStats.Rods:FindFirstChild("Carbon Rod") and not playerStats.Rods:FindFirstChild("Trident Rod") then
-                            Teleport(CFrame.new(939.354431, -738.08197, 1457.44556, -0.991571009, -1.55779851e-08, 0.129564434, -1.45141978e-08, 1, 9.15472853e-09, -0.129564434, 7.19703941e-09, -0.991571009))
+                            Teleport(CFrame.new(-2675.09766, 164.75061, 1757.24365, 0.138901547, 8.41644479e-08, 0.990306199, 1.40240708e-08, 1, -8.69553389e-08, -0.990306199, 2.59663562e-08, 0.138901547))
                         elseif not isShakeUI and playerStats.Rods:FindFirstChild("Carbon Rod") and playerStats.Rods:FindFirstChild("Trident Rod") then
-                            Teleport(CFrame.new(939.354431, -738.08197, 1457.44556, -0.991571009, -1.55779851e-08, 0.129564434, -1.45141978e-08, 1, 9.15472853e-09, -0.129564434, 7.19703941e-09, -0.991571009))
+                            Teleport(CFrame.new(-2675.09766, 164.75061, 1757.24365, 0.138901547, 8.41644479e-08, 0.990306199, 1.40240708e-08, 1, -8.69553389e-08, -0.990306199, 2.59663562e-08, 0.138901547))
                         end
                         if coins >= 2000 and not playerStats.Rods:FindFirstChild("Carbon Rod") and not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("shakeui") then
                             Autorobs()
@@ -413,44 +413,44 @@ spawn(function()
                                 _G.Tween:Cancel()
                             end
                         end
-                        if not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("shakeui") and workspace.world.npcs:FindFirstChild("Milo Merchant") then
-                            local npc = workspace.world.npcs["Milo Merchant"]
+                        if not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("shakeui") and workspace.world.npcs:FindFirstChild("Marytn Merchant") then
+                            local npc = workspace.world.npcs["Marytn Merchant"]
                             if npc then
-                                npc:SetPrimaryPartCFrame(CFrame.new(939.741516, -738.085693, 1458.93274))
+                                npc:SetPrimaryPartCFrame(CFrame.new(-2679, 165, 1757))
                             end
                             Click()
                             if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Barreleye Fish") then
                                 Click()
                                 game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Barreleye Fish"))
-                                workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
+                                workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Marytn Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
                             elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Sea Snake") then
                                 Click()
                                 game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Sea Snake"))
-                                workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
+                                workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Marytn Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
                             elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Small Spine Chimera") then
                                 Click()
                                 game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Small Spine Chimera"))
-                                workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
+                                workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Marytn Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
                             elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Nautilus") then
                                 Click()
                                 game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Nautilus"))
-                                workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
+                                workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Marytn Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
                             elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Mutated Shark") then
                                 Click()
                                 game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Mutated Shark"))
-                                workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
+                                workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Marytn Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
                             elseif game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Ancient Eel") then
                                 Click()
                                 game.Players.LocalPlayer.Character.Humanoid:EquipTool(game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Ancient Eel"))
-                                workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
+                                workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Marytn Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
                             end
                             local virtualInput = game:GetService("VirtualInputManager")
                             virtualInput:SendKeyEvent(true, Enum.KeyCode.E, false, game)
                             wait(0.05)
                             virtualInput:SendKeyEvent(false, Enum.KeyCode.E, false, game)
                             wait(0.05)
-                            workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Milo Merchant"):WaitForChild("merchant"):WaitForChild("sellall"):InvokeServer()
-                            if workspace.world.npcs:FindFirstChild("Milo Merchant") and not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("shakeui") then
+                            workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Marytn Merchant"):WaitForChild("merchant"):WaitForChild("sellall"):InvokeServer()
+                            if workspace.world.npcs:FindFirstChild("Marytn Merchant") and not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("shakeui") then
                                 local args = {
                                     [1] = 100,
                                     [2] = 1
