@@ -138,15 +138,24 @@ local function AutoEquip2()
     end
 end
 
-local function Reset2()
-    Wait(300)
-    game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, true, nil, 1)
-    game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1) 
+local function UnEquipAll2()
+    task.wait(120) -- รอ 2 นาที
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid:UnequipTools() -- เลิกถือไอเทมทั้งหมด
+    end
 end
 
-local function Reset()
-    game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, true, nil, 1)
-    game:GetService("VirtualInputManager"):SendMouseButtonEvent(10, 100, 0, false, nil, 1)  
+
+local function UnEquipAll()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid:UnequipTools() -- เลิกถือไอเทมทั้งหมด
+    end
 end
 
 
@@ -333,7 +342,7 @@ spawn(function()
                         end
                         if coins >= 2000 and not playerStats.Rods:FindFirstChild("Carbon Rod") and not game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("shakeui") then
                             Autorobs()
-                            Reset()
+                            UnEquipAll()
                             if _G.Tween then
                                 _G.Tween:Cancel()
                             end
@@ -478,7 +487,7 @@ while wait(3) do
             end
         elseif game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == false then
             AutoEquip()
-            Reset2()
+            UnEquipAll2()
         end
     end)
 end
