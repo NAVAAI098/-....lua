@@ -1,0 +1,254 @@
+if not game:IsLoaded() then
+	game.Loaded:Wait()
+end
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedFirst = game:GetService("ReplicatedFirst")
+local CoreGui = game:GetService("CoreGui")
+local LocalPlayer = Players.LocalPlayer
+
+
+local antiafk = getconnections or get_signal_cons;
+if antiafk then
+	for i, v in pairs(antiafk(game.Players.LocalPlayer.Idled)) do
+		if v["Disable"] then
+			v["Disable"](v);
+		elseif v["Disconnect"] then
+			v["Disconnect"](v);
+		end;
+	end;
+	for i, v in next, antiafk(game.Players.LocalPlayer.Idled) do
+		v:Disable();
+	end;
+    warn("Anti AFK Loaded");
+else
+	game.Players.LocalPlayer:Kick("Missing getconnections() functions executer not supported");
+end;
+
+for _, connection in ipairs(getconnections(game:GetService("Players").LocalPlayer.Idled)) do
+    connection: Disable()
+end
+game:GetService("Players").LocalPlayer.Idled:Connect(function()
+    local VirtualUser = game:GetService("VirtualUser")
+    VirtualUser:Button2Down(Vector2.new(0, 0),workspace.CurrentCamera.CFrame)
+    task.wait(0.1)
+    VirtualUser:Button2Up(Vector2.new(0, 0),workspace.CurrentCamera.CFrame)
+end)
+
+repeat wait() until Players and LocalPlayer and ReplicatedStorage and ReplicatedFirst
+
+local function comma(number)
+	local formatted = tostring(number)
+	while true do
+		formatted, count = string.gsub(formatted, "^(-?%d+)(%d%d%d)", "%1,%2")
+		if count == 0 then
+			break
+		end
+	end
+	return formatted
+end
+local function createGui()
+	local existingGui = CoreGui:FindFirstChild("kaitun - budget")
+	if existingGui then
+		existingGui:Destroy()
+	end
+
+	local ScreenGui = Instance.new("ScreenGui")
+	ScreenGui.Name = "kaitun - budget"
+	ScreenGui.Parent = CoreGui
+	ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	ScreenGui.DisplayOrder = 999
+	ScreenGui.ResetOnSpawn = false
+	ScreenGui.IgnoreGuiInset = true
+
+	local Frame = Instance.new("Frame")
+	Frame.Parent = ScreenGui
+	Frame.Active = false
+	Frame.AnchorPoint = Vector2.new(0.5, 0.5)
+	Frame.BackgroundColor3 = Color3.fromRGB(7, 7, 7)
+	Frame.BackgroundTransparency = 0.7
+	-- Frame.BorderSizePixel = 0
+	Frame.Position = UDim2.new(0.5, 0, 0.5, 0)
+	Frame.Size = UDim2.new(1, 0, 1, 0)
+
+	local TextLabel = Instance.new("TextLabel")
+	TextLabel.Parent = Frame
+	TextLabel.Active = true
+	TextLabel.BackgroundTransparency = 1
+	TextLabel.Position = UDim2.new(0.52, 0, 0.32, 0)
+	TextLabel.Size = UDim2.new(0.38, 0, 0.36, 0)
+	TextLabel.Font = Enum.Font.FredokaOne
+	TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+	TextLabel.TextScaled = true
+	TextLabel.TextWrapped = true
+	TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+	local ImageLabel = Instance.new("ImageLabel")
+	ImageLabel.Parent = Frame
+	ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+	ImageLabel.BackgroundTransparency = 1
+	ImageLabel.Position = UDim2.new(0.42, 0, 0.5, 0)
+	ImageLabel.Size = UDim2.new(0.18, 0, 0.38, 0)
+	ImageLabel.Image = "rbxassetid://105349910119857"
+
+	return TextLabel
+end
+
+local function setStateGui(state)
+	local existingGui = CoreGui:FindFirstChild("kaitun - budget")
+	if not existingGui then return end
+	if existingGui.Enabled == state then return end
+	existingGui.Enabled = state
+end
+
+local function monitorCoins()
+	local success, data_coins = pcall(function()
+		return LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("Data"):WaitForChild("Coins", 9e9)
+	end)
+
+	if success and data_coins then
+		local TextLabel = createGui()
+		TextLabel.Text = comma(data_coins.Value)
+		data_coins:GetPropertyChangedSignal("Value"):Connect(function()
+			TextLabel.Text = comma(data_coins.Value)
+		end)
+	else
+		warn("Failed to load data_coins.")
+	end
+end
+
+setStateGui(true)
+monitorCoins()
+
+local interact = function(path)
+    if path then
+        game:GetService("GuiService").SelectedObject = path
+        task.wait(0.5)
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+        task.wait(0.5)
+        game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+        task.wait(0.5)
+        game:GetService("GuiService").SelectedObject = nil
+    end
+end
+
+local function ignoreEvents()
+    local ignoredEvents = {
+        "MeteorSelfDamage", "MeteorFlySelfDamage", "LavaSelfDamage", "OxygenRemote",
+        "TornadoSelfDamage", "WillToLiveSelfDamage", "DrownRemote", "BreathToggle"
+    }
+
+    local originalHook = nil
+    originalHook = hookmetamethod(game, "__namecall", function(self, ...)
+        if table.find(ignoredEvents, tostring(self)) then
+            return nil
+        end
+        return originalHook(self, ...)
+    end)
+end
+
+local function checkAndCreateSlot()
+    local playerGui = game:GetService("Players").LocalPlayer.PlayerGui
+    local dinoValue = playerGui.Data.Slot1.Dino.Value
+
+    if dinoValue ~= "Sochuri" or dinoValue == nil then
+        for i = 1, 3 do
+            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("DeleteSlotRemote"):InvokeServer("Slot"..i, false)
+        end
+    end
+
+    if playerGui.Data.Slot1.Age.Value == 0 or dinoValue == nil then
+        game:GetService("ReplicatedStorage").Remotes.CreateSlotRemote:InvokeServer("Sochuri")
+        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CreateSlotRemote"):InvokeServer("Sochuri")
+        task.wait(10)
+    end
+
+    if playerGui.Data.Slot1.Age.Value >= 1 then
+        game:GetService("ReplicatedStorage").Remotes.SpawnRemote:InvokeServer("Slot1")
+        task.wait(10)
+    end
+end
+
+local function handleDeath()
+    local playerGui = game:GetService("Players").LocalPlayer.PlayerGui
+    local deathGui = playerGui.DeathGui.ContainerFrame
+
+    if deathGui.Visible == true then
+        for _, button in pairs(deathGui.BottomFrame.ButtonsFrame:GetChildren()) do
+            if button.Name == "Return" then
+                local virtualUser = game:GetService("VirtualUser")
+                button.Size = UDim2.new(5000, 5000, 5000, 5000)
+                virtualUser:CaptureController()
+                virtualUser:ClickButton1(Vector2.new(50, 50), CFrame.new(Vector3.new(0, 0, 0)))
+            end
+        end
+    end
+end
+
+local function DailyLoginGui()
+    local playerGui = game:GetService("Players").LocalPlayer.PlayerGui
+
+    if playerGui.DailyLoginGui.ContainerFrame.CurrencyFrame.ClaimButton.Visible == true then
+        for _, button in pairs(game:GetService("Players").LocalPlayer.PlayerGui.DailyLoginGui.ContainerFrame.CurrencyFrame:GetChildren()) do
+            if button.Name == "ClaimButton" then
+                local virtualUser = game:GetService("VirtualUser")
+                button.Size = UDim2.new(5000, 5000, 5000, 5000)
+                virtualUser:CaptureController()
+                virtualUser:ClickButton1(Vector2.new(50, 50), CFrame.new(Vector3.new(0, 0, 0)))
+            end
+        end
+    end
+    if playerGui.DailyLoginGui.ContainerFrame.CurrencyFrame.CloseButton.Visible == true then
+        for _, button in pairs(game:GetService("Players").LocalPlayer.PlayerGui.DailyLoginGui.ContainerFrame.CurrencyFrame:GetChildren()) do
+            if button.Name == "CloseButton" then
+                local virtualUser = game:GetService("VirtualUser")
+                button.Size = UDim2.new(5000, 5000, 5000, 5000)
+                virtualUser:CaptureController()
+                virtualUser:ClickButton1(Vector2.new(50, 50), CFrame.new(Vector3.new(0, 0, 0)))
+            end
+        end
+    end
+end
+
+
+function Chick()
+    pcall(function()
+        local virtualUser = game:GetService("VirtualUser")
+        virtualUser:CaptureController()
+        virtualUser:ClickButton1(Vector2.new(50, 50), CFrame.new(Vector3.new(0, 0, 0)))
+        wait(2)
+    end)
+end
+
+function drinkWater()
+    pcall(function()
+        local drinkArgs = {
+            [1] = workspace.Interactions.Lakes.Lake
+        }
+        game:GetService("ReplicatedStorage").Remotes.DrinkRemote:FireServer(unpack(drinkArgs))
+    end)
+end
+
+local function restartSlot()
+    local playerGui = game:GetService("Players").LocalPlayer.PlayerGui
+    if playerGui.Data.Slot1.Health.Value == 0 and not playerGui.DeathGui.ContainerFrame.Visible then
+        task.wait(10)
+        local args = { "Slot1", false }
+        game:GetService("ReplicatedStorage").Remotes.RestartSlotRemote:InvokeServer(unpack(args))
+        task.wait(10)
+    end
+end
+
+while task.wait(1) do
+    pcall(function()
+        if game.PlaceId == 5233782396 then
+            checkAndCreateSlot()
+            handleDeath()
+            DailyLoginGui()
+            restartSlot()
+            Chick()
+            -- drinkWater()
+        end
+    end)
+end
