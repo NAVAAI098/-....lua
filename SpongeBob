@@ -26,9 +26,8 @@ function Play()
     game:GetService("VirtualInputManager"):SendMouseButtonEvent(50, 500, 0, false, nil, 1)
     end 
     if game:GetService("Players").LocalPlayer.PlayerGui.QueueScreen.Enabled == false then
+        wait(3)
         game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(111.61590576171875, 10.364459037780762, -528.5863647460938)
-        wait(10)
-        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(148.61590576171875, 7.364459037780762, -228.5863647460938)
         interact(game:GetService("Players").LocalPlayer.PlayerGui.QueueScreen.Main.SelectionScreen.Main.Options.Options.Confirm)
         interact(game:GetService("Players").LocalPlayer.PlayerGui.QueueScreen.Main.StartScreen.Main.Options.Start)
     end
@@ -97,7 +96,7 @@ spawn(function()
                     end
                 end
                 if game:GetService("Players").LocalPlayer.PlayerGui.RoundSummary.Enabled == true then
-                    interact(game:GetService("Players").LocalPlayer.PlayerGui.RoundSummary.Main.Content.Actions.Replay)
+                    interact(game:GetService("Players").LocalPlayer.PlayerGui.RoundSummary.Main.Content.Return)
                 end
                 if game:GetService("Players").LocalPlayer.PlayerGui.GameUI.VoteStart.Main.Button.Visible == true then
                     interact(game:GetService("Players").LocalPlayer.PlayerGui.GameUI.VoteStart.Main.Button)
