@@ -85,6 +85,10 @@ while task.wait(2) do
         end
         if game.PlaceId == 137461635848196 then
             Autofarm()
+            task.wait(30) -- รอ 10 วินาที
+            game:GetService("VirtualInputManager"):SendKeyEvent(true,	32,false,game.Players.LocalPlayer.Character.HumanoidRootPart)
+            task.wait(5) -- รอ 10 วินาที
+            game:GetService("VirtualInputManager"):SendKeyEvent(false,	32,false,game.Players.LocalPlayer.Character.HumanoidRootPart)
             for _, v in ipairs(workspace.Friendlies:GetChildren()) do
                 if v:IsA("Model") and v.Name == "Spongebob" then
                     local id = v:GetAttribute("Id") or "ไม่มี ID"
