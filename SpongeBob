@@ -77,37 +77,42 @@ function Autofarm()
     
     game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.7.0"):WaitForChild("knit"):WaitForChild("Services"):WaitForChild("TowerService"):WaitForChild("RF"):WaitForChild("PlaceTower"):InvokeServer(unpack(args))
 end
-
-while task.wait(2) do
-    pcall(function()
-        if game.PlaceId == 123662243100680 then
-            Play()
-        end
-        if game.PlaceId == 137461635848196 then
-            Autofarm()
-            task.wait(30) -- รอ 10 วินาที
-            game:GetService("VirtualInputManager"):SendKeyEvent(true,	32,false,game.Players.LocalPlayer.Character.HumanoidRootPart)
-            task.wait(5) -- รอ 10 วินาที
-            game:GetService("VirtualInputManager"):SendKeyEvent(false,	32,false,game.Players.LocalPlayer.Character.HumanoidRootPart)
-            for _, v in ipairs(workspace.Friendlies:GetChildren()) do
-                if v:IsA("Model") and v.Name == "Spongebob" then
-                    local id = v:GetAttribute("Id") or "ไม่มี ID"
-                    local args = {
-                        [1] = id
-                    }
-                    
-                    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.7.0"):WaitForChild("knit"):WaitForChild("Services"):WaitForChild("GameService"):WaitForChild("RF"):WaitForChild("UpgradeTower"):InvokeServer(unpack(args))                
+spawn(function()
+    while task.wait(2) do
+        pcall(function()
+            if game.PlaceId == 123662243100680 then
+                Play()
+            end
+            if game.PlaceId == 137461635848196 then
+                Autofarm()
+                for _, v in ipairs(workspace.Friendlies:GetChildren()) do
+                    if v:IsA("Model") and v.Name == "Spongebob" then
+                        local id = v:GetAttribute("Id") or "ไม่มี ID"
+                        local args = {
+                            [1] = id
+                        }
+                        
+                        game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.7.0"):WaitForChild("knit"):WaitForChild("Services"):WaitForChild("GameService"):WaitForChild("RF"):WaitForChild("UpgradeTower"):InvokeServer(unpack(args))                
+                    end
+                end
+                if game:GetService("Players").LocalPlayer.PlayerGui.RoundSummary.Enabled == true then
+                    interact(game:GetService("Players").LocalPlayer.PlayerGui.RoundSummary.Main.Content.Actions.Replay)
+                end
+                if game:GetService("Players").LocalPlayer.PlayerGui.GameUI.VoteStart.Main.Button.Visible == true then
+                    interact(game:GetService("Players").LocalPlayer.PlayerGui.GameUI.VoteStart.Main.Button)
+                end
+                if game:GetService("Players").LocalPlayer.PlayerGui.GameUI.Top.SkipWave.Button.Visible == true then
+                    interact(game:GetService("Players").LocalPlayer.PlayerGui.GameUI.Top.SkipWave.Button)
                 end
             end
-            if game:GetService("Players").LocalPlayer.PlayerGui.RoundSummary.Enabled == true then
-                interact(game:GetService("Players").LocalPlayer.PlayerGui.RoundSummary.Main.Content.Actions.Replay)
-            end
-            if game:GetService("Players").LocalPlayer.PlayerGui.GameUI.VoteStart.Main.Button.Visible == true then
-                interact(game:GetService("Players").LocalPlayer.PlayerGui.GameUI.VoteStart.Main.Button)
-            end
-            if game:GetService("Players").LocalPlayer.PlayerGui.GameUI.Top.SkipWave.Button.Visible == true then
-                interact(game:GetService("Players").LocalPlayer.PlayerGui.GameUI.Top.SkipWave.Button)
-            end
-        end
+        end)
+    end
+end)
+while task.wait(2) do
+    pcall(function()
+        task.wait(30) -- รอ 10 วินาที
+        game:GetService("VirtualInputManager"):SendKeyEvent(true,	32,false,game.Players.LocalPlayer.Character.HumanoidRootPart)
+        task.wait(5) -- รอ 10 วินาที
+        game:GetService("VirtualInputManager"):SendKeyEvent(false,	32,false,game.Players.LocalPlayer.Character.HumanoidRootPart)
     end)
 end
