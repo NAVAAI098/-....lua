@@ -5,6 +5,55 @@ repeat task.wait() until game:GetService("Players").LocalPlayer
 repeat task.wait() until game:GetService("ReplicatedStorage")
 repeat task.wait() until game:GetService("ReplicatedFirst")
 --- คลิก GUI ---
+local function UltraLowGraphics()
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if obj:IsA("ParticleEmitter") or obj:IsA("Smoke") or obj:IsA("Fire") or obj:IsA("Sparkles") then
+            obj:Destroy()
+        end
+
+        if obj:IsA("PointLight") or obj:IsA("SpotLight") or obj:IsA("SurfaceLight") then
+            obj:Destroy()
+        end
+
+        if obj:IsA("Decal") or obj:IsA("Texture") then
+            obj:Destroy()
+        end
+
+        if obj:IsA("Accessory") or obj:IsA("Clothing") or obj:IsA("Shirt") or obj:IsA("Pants") or obj:IsA("ShirtGraphic") then
+            obj:Destroy()
+        end
+
+        if obj:IsA("BasePart") then
+            obj.Material = Enum.Material.Plastic
+            obj.Reflectance = 0
+            obj.CastShadow = false
+        end
+    end
+
+    if workspace:FindFirstChildOfClass("Terrain") then
+        local terrain = workspace.Terrain
+        terrain.WaterWaveSize = 0
+        terrain.WaterTransparency = 1
+        terrain.WaterReflectance = 0
+        terrain.WaterColor = Color3.new(0, 0, 0)
+    end
+
+    local lighting = game:GetService("Lighting")
+    lighting.GlobalShadows = false
+    lighting.FogEnd = 1000000
+    lighting.Brightness = 1
+
+    print("✅ Ultra Low Graphics Enabled! FPS Ready 🚀")
+end
+
+-- เรียกฟังก์ชันเมื่อโหลดแมพเสร็จ
+if game:IsLoaded() then
+    UltraLowGraphics()
+else
+    game.Loaded:Wait()
+    UltraLowGraphics()
+end
+
 local interact = function(v2)
     local events = {"Activated","MouseButton1Down","MouseButton1Click","MouseButton1Up","MouseButton1Down"}
     for i,v in pairs(events) do
@@ -14,71 +63,117 @@ local interact = function(v2)
     end
 end
 
-function Play()
-    local ReplicatedStorage = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
-    if game.PlaceId == 123662243100680 and game:GetService("Players").LocalPlayer.PlayerGui.HUD.Enabled == false then
-    local args = {
-        [1] = "Spongebob"
-    }
-    
-    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.7.0"):WaitForChild("knit"):WaitForChild("Services"):WaitForChild("UnitService"):WaitForChild("RF"):WaitForChild("SelectStarterUnit"):InvokeServer(unpack(args))
-    game:GetService("VirtualInputManager"):SendMouseButtonEvent(50, 500, 0, true, nil, 1)
-    game:GetService("VirtualInputManager"):SendMouseButtonEvent(50, 500, 0, false, nil, 1)
-    end 
-    if game:GetService("Players").LocalPlayer.PlayerGui.QueueScreen.Enabled == false then
-        wait(3)
-        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(111.61590576171875, 10.364459037780762, -528.5863647460938)
-        interact(game:GetService("Players").LocalPlayer.PlayerGui.QueueScreen.Main.SelectionScreen.Main.Options.Options.Confirm)
-        interact(game:GetService("Players").LocalPlayer.PlayerGui.QueueScreen.Main.StartScreen.Main.Options.Start)
+local function isTowerAtPosition(position, threshold)
+    threshold = threshold or 1
+    for _, obj in pairs(workspace:GetChildren()) do
+        if obj:IsA("Model") and obj:FindFirstChild("PrimaryPart") then
+            if (obj.PrimaryPart.Position - position).Magnitude < threshold then
+                return true
+            end
+        end
     end
-    if game:GetService("Players").LocalPlayer.PlayerGui.QueueScreen.Enabled == true then
-        interact(game:GetService("Players").LocalPlayer.PlayerGui.QueueScreen.Main.SelectionScreen.Main.Options.Options.Confirm)
-        wait(1)
-        interact(game:GetService("Players").LocalPlayer.PlayerGui.QueueScreen.Main.StartScreen.Main.Options.Start)
+    return false
+end
+
+-- วาร์ปวนเรื่อย ๆ จนกว่าจะเข้าสู่ QueueScreen
+function WarpUntilQueueScreen()
+    local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+    local HUD = playerGui:WaitForChild("HUD") -- ✅ รอให้ HUD โหลดก่อน
+    if HUD.Enabled then
+        local player = game:GetService("Players").LocalPlayer
+        local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+        local points = {
+            Vector3.new(115, 10, -530),
+            Vector3.new(82, 10, -550),
+            Vector3.new(67, 10, -581),
+            Vector3.new(86, 10, -616),
+            Vector3.new(117, 10, -626),
+        }
+        while player.PlayerGui.QueueScreen.Enabled == false do
+            for _, pos in ipairs(points) do
+                if player.PlayerGui.QueueScreen.Enabled then
+                    break
+                end
+                if hrp then
+                    hrp.CFrame = CFrame.new(pos)
+                end
+                task.wait(2)
+            end
+        end
     end
 end
+
+-- เริ่มเกม
+function Play()
+    WarpUntilQueueScreen()
+
+    local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+    local HUD = playerGui:WaitForChild("HUD") -- ✅ รอให้ HUD โหลดก่อน
+    if not HUD.Enabled then
+        local args = {
+            [1] = "Spongebob"
+        }
+
+        game:GetService("ReplicatedStorage"):WaitForChild("Packages")
+            :WaitForChild("_Index")
+            :WaitForChild("acecateer_knit@1.7.1")
+            :WaitForChild("knit")
+            :WaitForChild("Services")
+            :WaitForChild("UnitService")
+            :WaitForChild("RF")
+            :WaitForChild("SelectStarterUnit")
+            :InvokeServer(unpack(args))
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(50, 500, 0, true, nil, 1)
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(50, 500, 0, false, nil, 1)
+    end
+
+    if playerGui.QueueScreen.Enabled then
+        interact(playerGui.QueueScreen.Main.SelectionScreen.Main.StageSelect.Info.Content.Difficulties.Hard)
+    end
+
+    if not playerGui.QueueScreen.Main.SelectionScreen.Main.StageSelect.Info.Content.Difficulties.Hard.Content.Unselected.Visible then
+        interact(playerGui.QueueScreen.Main.SelectionScreen.Main.Options.Options.Confirm)
+        wait(1)
+        interact(playerGui.QueueScreen.Main.StartScreen.Main.Options.Start)
+    end
+end
+
 
 function Autofarm()
-    local mob = workspace:FindFirstChild("Enemies"):FindFirstChildOfClass("Model")
+    local towerPositions = {
+        Vector3.new(-82.05, 81.90, 0.98),
+        Vector3.new(-65.41, 81.83, 10.75),
+        Vector3.new(-50.12, 81.83, 10.52),
+        Vector3.new(-50.07, 81.90, 0.02),
+        Vector3.new(-59.23, 81.90, 0.01),
+        Vector3.new(-58.87, 81.83, 10.19),
+    }
 
-    if not mob then return {} end 
-    if not mob:FindFirstChild("RootPart") then return {} end 
-    
-    local posmob = mob:FindFirstChild("RootPart").Position
-    local x,y,z = posmob.X,posmob.Y,posmob.Z
-    local offset = y-0.06524657811
-    local pos = 4.5
-    local neg = -4.5
-    
-    local args = {
-        [1] = CFrame.new(x+neg,offset,z),
-        [2] = 1
-    }
-    
-    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.7.0"):WaitForChild("knit"):WaitForChild("Services"):WaitForChild("TowerService"):WaitForChild("RF"):WaitForChild("PlaceTower"):InvokeServer(unpack(args))    
+    for _, pos in ipairs(towerPositions) do
+        if not isTowerAtPosition(pos) then
+            local args = {
+                [1] = CFrame.new(pos),
+                [2] = 1
+            }
 
-    local args = {
-        [1] = CFrame.new(x+neg,offset,z),
-        [2] = 1
-    }
-    
-    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.7.0"):WaitForChild("knit"):WaitForChild("Services"):WaitForChild("TowerService"):WaitForChild("RF"):WaitForChild("PlaceTower"):InvokeServer(unpack(args))
-    
-    local args = {
-        [1] = CFrame.new(x+neg,offset,z),
-        [2] = 1
-    }
-    
-    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.7.0"):WaitForChild("knit"):WaitForChild("Services"):WaitForChild("TowerService"):WaitForChild("RF"):WaitForChild("PlaceTower"):InvokeServer(unpack(args))
-    local args = {
-        [1] = CFrame.new(x+neg,offset,z),
-        [2] = 1
-    }
-    
-    game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.7.0"):WaitForChild("knit"):WaitForChild("Services"):WaitForChild("TowerService"):WaitForChild("RF"):WaitForChild("PlaceTower"):InvokeServer(unpack(args))
+            game:GetService("ReplicatedStorage")
+                :WaitForChild("Packages")
+                :WaitForChild("_Index")
+                :WaitForChild("acecateer_knit@1.7.1")
+                :WaitForChild("knit")
+                :WaitForChild("Services")
+                :WaitForChild("TowerService")
+                :WaitForChild("RF")
+                :WaitForChild("PlaceTower")
+                :InvokeServer(unpack(args))
+
+            wait(0.2) -- พักเล็กน้อยเพื่อความปลอดภัย
+        end
+    end
 end
+
 spawn(function()
-    while task.wait(2) do
+    while task.wait(0.2) do
         pcall(function()
             if game.PlaceId == 123662243100680 then
                 Play()
@@ -92,17 +187,8 @@ spawn(function()
                             [1] = id
                         }
                         
-                        game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_knit@1.7.0"):WaitForChild("knit"):WaitForChild("Services"):WaitForChild("GameService"):WaitForChild("RF"):WaitForChild("UpgradeTower"):InvokeServer(unpack(args))                
+                        game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("acecateer_knit@1.7.1"):WaitForChild("knit"):WaitForChild("Services"):WaitForChild("GameService"):WaitForChild("RF"):WaitForChild("UpgradeTower"):InvokeServer(unpack(args))
                     end
-                end
-                if game:GetService("Players").LocalPlayer.PlayerGui.RoundSummary.Enabled == true then
-                    interact(game:GetService("Players").LocalPlayer.PlayerGui.RoundSummary.Main.Content.Return)
-                end
-                if game:GetService("Players").LocalPlayer.PlayerGui.GameUI.VoteStart.Main.Button.Visible == true then
-                    interact(game:GetService("Players").LocalPlayer.PlayerGui.GameUI.VoteStart.Main.Button)
-                end
-                if game:GetService("Players").LocalPlayer.PlayerGui.GameUI.Top.SkipWave.Button.Visible == true then
-                    interact(game:GetService("Players").LocalPlayer.PlayerGui.GameUI.Top.SkipWave.Button)
                 end
             end
         end)
@@ -110,6 +196,16 @@ spawn(function()
 end)
 while task.wait(2) do
     pcall(function()
+        if game:GetService("Players").LocalPlayer.PlayerGui.RoundSummary.Enabled == true then
+            interact(game:GetService("Players").LocalPlayer.PlayerGui.RoundSummary.Main.Content.Actions.Replay)
+        end
+        if game:GetService("Players").LocalPlayer.PlayerGui.GameUI.VoteStart.Main.Button.Visible == true then
+            interact(game:GetService("Players").LocalPlayer.PlayerGui.GameUI.VoteStart.Main.Button)
+        end
+        if game:GetService("Players").LocalPlayer.PlayerGui.GameUI.Top.SkipWave.Button.Visible == true then
+            interact(game:GetService("Players").LocalPlayer.PlayerGui.GameUI.Top.SkipWave.Button)
+            game:GetService("ReplicatedStorage"):WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("acecateer_knit@1.7.1"):WaitForChild("knit"):WaitForChild("Services"):WaitForChild("GameService"):WaitForChild("RF"):WaitForChild("VoteSkipRound"):InvokeServer()
+        end
         task.wait(30) -- รอ 10 วินาที
         game:GetService("VirtualInputManager"):SendKeyEvent(true,	32,false,game.Players.LocalPlayer.Character.HumanoidRootPart)
         task.wait(5) -- รอ 10 วินาที
